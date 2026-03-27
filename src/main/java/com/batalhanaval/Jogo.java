@@ -1,20 +1,13 @@
 package com.batalhanaval;
 
-import com.batalhanaval.model.Navio;
-import com.batalhanaval.model.Tabuleiro;
+import com.batalhanaval.model.entities.JogadorTerminal;
+import com.batalhanaval.model.entities.Navio;
+import com.batalhanaval.model.entities.Tabuleiro;
 
 public class Jogo {
     public static void main(String[] args){
-        Tabuleiro jogo = new Tabuleiro();
-        jogo.iniciar();
-        jogo.exibir();
-        System.out.println("----------------------");
-        jogo.adicionarNavio(new Navio(1 , 2));
-        jogo.adicionarNavio(new Navio(1 , 2));
-        jogo.adicionarNavio(new Navio(1 , 3));
-
-        jogo.exibir();
+        JogadorTerminal jogador = new JogadorTerminal("Douglas");
+        jogador.exibirTabuleiro();
         
-  
     }
 } 
