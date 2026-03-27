@@ -15,4 +15,9 @@ public abstract class Jogador {
     
     public abstract void jogar();
     public abstract void exibirTabuleiro();
+    
+    public void posicionarNavio(Navio navio){
+        tabuleiro.adicionarNavio(navio);
+    }
+ 
 }
