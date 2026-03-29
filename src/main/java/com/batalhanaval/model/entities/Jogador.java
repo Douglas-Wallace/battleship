@@ -8,7 +8,6 @@ public abstract class Jogador {
         this.nome = nome;
         
         this.tabuleiro = new Tabuleiro();
-        tabuleiro.iniciar();
     }
     
     
@@ -16,8 +15,8 @@ public abstract class Jogador {
     public abstract void jogar();
     public abstract void exibirTabuleiro();
     
-    public void posicionarNavio(Navio navio){
-        tabuleiro.adicionarNavio(navio);
+    public void posicionarNavio(Navio navio, int linha, int coluna, char direcao){
+        tabuleiro.adicionarNavio(navio, linha, coluna, direcao);
     }
  
 }

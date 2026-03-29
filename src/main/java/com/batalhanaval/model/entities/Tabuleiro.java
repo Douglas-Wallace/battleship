@@ -16,9 +16,25 @@ public class Tabuleiro {
         }
     }
     
+    public void exibir() {
+        for (int i = 0; i < tamanho; i++) {
+            for (int j = 0; j < tamanho; j++) {
+                if (tabuleiro[i][j].temNavio()) {
+                    System.out.print("N ");
+                } else {
+                    System.out.print("~ ");
+                }
+            }
+            System.out.println();
+        }
+    }
+    
     public void adicionarNavio(Navio navio, int linha, int coluna, char direcao){
+        linha = linha - 1;
+        coluna = coluna - 1;
         validarDirecao(direcao);
         
+        //validação
         for(int i = 0; i < navio.getTamanho(); i++){     
             int pos[] = calcularPosicao(linha, coluna, direcao, i);
             int parteLinha = pos[0];
@@ -27,7 +43,7 @@ public class Tabuleiro {
             if(!estaDentroDoTabuleiro(parteLinha, parteColuna) || !podePosicionar(parteLinha, parteColuna)){
                 throw new PosicionamentoInvalidoException("Tabuleiro - posição invalida");
             }
-    
+            
         }
         
         //inserção
@@ -74,7 +90,7 @@ public class Tabuleiro {
     public boolean podePosicionar(int linha, int coluna){
         for(int i = linha - 1; i <= linha + 1; i++){
             for(int j = coluna - 1; j <= coluna + 1; j++){
-                if(estaDentroDoTabuleiro(linha, coluna)){
+                if(estaDentroDoTabuleiro(i, j)){
                     if(tabuleiro[i][j].temNavio()){
                         return false;
                     }
