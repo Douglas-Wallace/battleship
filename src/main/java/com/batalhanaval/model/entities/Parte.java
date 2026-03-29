@@ -1,21 +1,23 @@
 package com.batalhanaval.model.entities;
 
 public class Parte {
-    private int x, y;
-    private boolean afundado;
+    private Navio navio;
+    private boolean atingida;
 
-    public Parte(int x, int y) {
-        this.x = x;
-        this.y = y;
-        this.afundado = false;
+    public Parte(Navio navio){
+        this.navio = navio;
+        this.atingida = false;
     }
     
-    
-    public void afundar(){
-        afundado = true;
+    public void atingir(){
+        this.atingida = true;
     }
     
-    public boolean getAfundado(){
-        return afundado;
+    public boolean foiAtingida(){
+        return atingida;
+    }
+    
+    public Navio getNavio(){
+        return navio;
     }
 }
