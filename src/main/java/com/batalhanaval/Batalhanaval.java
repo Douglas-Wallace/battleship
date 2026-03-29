@@ -7,6 +7,7 @@ import com.batalhanaval.model.entities.Tabuleiro;
 import java.sql.SQLOutput;
 
 public class Batalhanaval {
+    // MAIN PRA TESTES
     public static void main(String[] args){
         Tabuleiro tabuleiro = new Tabuleiro();
         Navio submarino = new Submarino();
