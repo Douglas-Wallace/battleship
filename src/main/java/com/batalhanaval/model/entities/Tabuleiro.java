@@ -1,26 +1,87 @@
 package com.batalhanaval.model.entities;
 
+import com.batalhanaval.model.exceptions.PosicionamentoInvalidoException;
+
 public class Tabuleiro {
     private final int tamanho = 10;
     private Celula[][] tabuleiro;
 
     public Tabuleiro(){
         tabuleiro = new Celula[tamanho][tamanho];
+        
+        for(int linha = 0; linha < tamanho; linha++){
+            for(int coluna = 0; coluna < tamanho; coluna++){
+                tabuleiro[linha][coluna] = new Celula();
+            }
+        }
     }
     
-    public void adicionarNavio(Navio navio, int x, int y, char direcaoo){
-        validarDirecao(direcaoo);
+    public void adicionarNavio(Navio navio, int linha, int coluna, char direcao){
+        validarDirecao(direcao);
         
+        for(int i = 0; i < navio.getTamanho(); i++){     
+            int pos[] = calcularPosicao(linha, coluna, direcao, i);
+            int parteLinha = pos[0];
+            int parteColuna = pos[1];
+            
+            if(!estaDentroDoTabuleiro(parteLinha, parteColuna) || !podePosicionar(parteLinha, parteColuna)){
+                throw new PosicionamentoInvalidoException("Tabuleiro - posição invalida");
+            }
+    
+        }
         
+        //inserção
+        for(int i = 0; i < navio.getTamanho(); i++){ 
+            int pos[] = calcularPosicao(linha, coluna, direcao, i);
+            int parteLinha = pos[0];
+            int parteColuna = pos[1];
+            
+            tabuleiro[parteLinha][parteColuna].setParte(navio.getPartes().get(i)); 
+     
+        }
+            
     }
+        
+   
     
     public void validarDirecao(char direcao){
         if(direcao != 'N' && direcao != 'S' && direcao != 'O' && direcao != 'L'){
             throw new RuntimeException("Tabuleiro - Direção inválida");
         }
     }
-   
+    
+    private int[] calcularPosicao(int linha, int coluna, char direcao, int i) {
+        int novaLinha = linha;
+        int novaColuna = coluna;
+
+        switch (direcao) {
+            case 'N': novaLinha = linha - i; break;
+            case 'S': novaLinha = linha + i; break;
+            case 'L': novaColuna = coluna + i; break;
+            case 'O': novaColuna = coluna - i; break;
+        }
+
+        return new int[]{novaLinha, novaColuna};
+    }
+    
+    public boolean estaDentroDoTabuleiro(int linha, int coluna){
+        if (linha < 0 || linha >= tamanho || coluna < 0 || coluna >= tamanho) {
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean podePosicionar(int linha, int coluna){
+        for(int i = linha - 1; i <= linha + 1; i++){
+            for(int j = coluna - 1; j <= coluna + 1; j++){
+                if(estaDentroDoTabuleiro(linha, coluna)){
+                    if(tabuleiro[i][j].temNavio()){
+                        return false;
+                    }
+                }
+                
+            }
+        }
+        return true;
+    }
 }
-
-
-
