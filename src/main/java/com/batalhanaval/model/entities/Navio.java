@@ -1,59 +1,36 @@
 package com.batalhanaval.model.entities;
 
-import com.batalhanaval.model.exceptions.OrientacaoInvalidaException;
+import java.util.ArrayList;
 
 public abstract class Navio {
-    protected int x, y;
-    protected int tamanho;
-    protected char orientacao;
-    protected Parte[] partes;
-    protected boolean afundado;
+    private ArrayList<Parte> partes;
+    private int tamanho;
 
-    public Navio(int x, int y, int tamanho, char orientacao) {
-        this.x = x;
-        this.y = y;
+    public Navio(int tamanho) {
         this.tamanho = tamanho;
-        this.orientacao = orientacao;
+        this.partes = new ArrayList<>();
         
-        this.afundado = false;
-        this.partes = new Parte[tamanho];
-    }
-
-    public int getX() {
-        return x;
-    }
-
-
-    public int getY() {
-        return y;
+        
+        for(int i = 0; i < tamanho; i++){
+            partes.add(new Parte(this));
+        }
     }
     
-
-    public int getTamanho() {
+    public int getTamanho(){
         return tamanho;
     }
-
-    public char getOrientacao() {
-        return orientacao;
-    }
-
-    public void setOrientacao(char orientacao) {
-        if(orientacao != 'S' || orientacao != 'N' || orientacao != 'L' || orientacao != 'O'){
-           throw new OrientacaoInvalidaException("[EXCEPTION] Navio - orientaçâo invalida!");
-        }
-        
-        this.orientacao = orientacao;
+    
+    
+    public ArrayList<Parte> getPartes(){
+        return partes;
     }
     
-    public void checarPartes(){
-        int i = 0;
+    public boolean foiAfundado() {
         for (Parte parte : partes){
-            if(parte.getAfundado()){
-                i++;
+            if(!parte.foiAtingida()){
+               return false;
             }
         }
-        if(i == tamanho){
-            afundado = true;
-        }
-    } 
+        return true;
+    }
 }
