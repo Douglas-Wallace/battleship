@@ -5,7 +5,7 @@ import com.batalhanaval.model.exceptions.PosicionamentoInvalidoException;
 public class Tabuleiro {
     private final int tamanho = 10;
     private Celula[][] tabuleiro;
-
+    
     public Tabuleiro(){
         tabuleiro = new Celula[tamanho][tamanho];
         
@@ -45,7 +45,7 @@ public class Tabuleiro {
    
     }
     
-    public void exibir() {
+    public void exibirProprio() {
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
                 
@@ -84,7 +84,7 @@ public class Tabuleiro {
                 throw new PosicionamentoInvalidoException("Tabuleiro - posição invalida");
             }
             
-        }
+        } 
         
         //inserção
         for(int i = 0; i < navio.getTamanho(); i++){ 
@@ -93,7 +93,7 @@ public class Tabuleiro {
             int parteColuna = pos[1];
             
             tabuleiro[parteLinha][parteColuna].setParte(navio.getPartes().get(i)); 
-     
+
         }
             
     }
