@@ -16,19 +16,19 @@ public class Batalhanaval {
         try{
             System.out.println("-------------------------");
             tabuleiro.adicionarNavio(submarino, 9, 5, 'S');
-            tabuleiro.exibir();
+            tabuleiro.exibirProprio();
             System.out.println("-------------------------");
             tabuleiro.adicionarNavio(carrier, 4, 5, 'L');
-            tabuleiro.exibir();
+            tabuleiro.exibirProprio();
             
             
             System.out.println("-------------------------");
             System.out.println(tabuleiro.atacar(9, 5));
-            tabuleiro.exibir();
+            tabuleiro.exibirProprio();
      
             System.out.println("-------------------------");
             System.out.println(tabuleiro.atacar(10, 5));
-            tabuleiro.exibir();
+            tabuleiro.exibirProprio();
     
         } catch(RuntimeException e) {
             e.printStackTrace();
