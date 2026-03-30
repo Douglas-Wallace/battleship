@@ -16,11 +16,51 @@ public class Tabuleiro {
         }
     }
     
+    public String atacar(int linha, int coluna){
+        linha = linha - 1;
+        coluna = coluna - 1;
+        
+        if(!estaDentroDoTabuleiro(linha, coluna)){
+            throw new PosicionamentoInvalidoException("Tabuleiro - posição invalida");
+        }
+        
+        Celula celula = tabuleiro[linha][coluna];
+        
+        if(celula.foiAtacada()){
+            return "JA_ATACADO";
+        }
+        
+        if(celula.temNavio()){
+            celula.atacar();
+            if(celula.navioAfundado()){
+                return "AFUNDOU";
+            } else {
+                return "ACERTOU";
+            } 
+            
+        } else {
+            celula.atacar();
+            return "AGUA";
+        }
+   
+    }
+    
     public void exibir() {
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
-                if (tabuleiro[i][j].temNavio()) {
-                    System.out.print("N ");
+                
+                Celula celula = tabuleiro[i][j];
+                
+                if (celula.temNavio()) {
+                    if (celula.navioAfundado()) {                   
+                        System.out.print("- ");                       
+                    } else if (celula.getParte().foiAtingida()){     
+                        System.out.print("X ");                       
+                    } else {
+                        System.out.print("N ");
+                    } 
+                } else if (celula.foiAtacada()){
+                    System.out.print("O ");
                 } else {
                     System.out.print("~ ");
                 }
