@@ -15,6 +15,6 @@ public class JogadorTerminal extends Jogador{
     
     @Override   
     public void exibirTabuleiro() {
-        
+        tabuleiro.exibirProprio();
     }
 }
