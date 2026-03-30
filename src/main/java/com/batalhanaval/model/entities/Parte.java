@@ -20,4 +20,5 @@ public class Parte {
     public Navio getNavio(){
         return navio;
     }
+   
 }

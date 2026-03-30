@@ -22,4 +22,16 @@ public class Celula {
     public void setParte(Parte parte){
         this.parte = parte;
     }
+    
+    public Parte getParte(){
+        return this.parte;
+    }
+    
+    public boolean navioAfundado(){
+        if(parte == null){
+            return false;
+        }
+        return parte.getNavio().foiAfundado();
+    }
+
 }
