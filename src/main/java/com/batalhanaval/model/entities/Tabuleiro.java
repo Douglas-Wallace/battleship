@@ -174,4 +174,19 @@ public class Tabuleiro {
             System.out.println();
         }
     }
+    
+    public boolean naviosAfundados() {
+        for(int i = 0; i < tamanho; i++){
+            for(int j = 0; j < tamanho; j++){
+                
+                Celula celula = tabuleiro[i][j];
+                
+                if(celula.temNavio() && !celula.navioAfundado()) {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
 }

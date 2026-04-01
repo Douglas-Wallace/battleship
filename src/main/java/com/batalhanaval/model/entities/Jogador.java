@@ -11,7 +11,7 @@ public abstract class Jogador {
         this.tabuleiro = new Tabuleiro();
     }
 
-    public abstract void jogar();
+    public abstract void jogar(Jogador inimigo);
 
     public abstract void exibirTabuleiro();
 
@@ -23,9 +23,13 @@ public abstract class Jogador {
     public void exibirTabuleiroIndividual() {
         tabuleiro.exibirProprio();
     }
-    
-    public void exibirTabuleiroInimigo(Jogador inimigo){
+
+    public void exibirTabuleiroInimigo(Jogador inimigo) {
         inimigo.tabuleiro.exibirInimigo();
+    }
+
+    public boolean naviosAfundados() {
+        return tabuleiro.naviosAfundados();
     }
 
 }
