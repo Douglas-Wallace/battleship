@@ -6,6 +6,7 @@ import com.batalhanaval.model.entities.Submarino;
 import com.batalhanaval.model.entities.Tabuleiro;
 import com.batalhanaval.model.entities.Jogador;
 import com.batalhanaval.model.entities.JogadorTerminal;
+import com.batalhanaval.model.entities.Jogo;
 import java.sql.SQLOutput;
 
 public class Batalhanaval {
@@ -21,6 +22,9 @@ public class Batalhanaval {
         
         jogador1.posicionarNavio(new PortaAvioes(), 1, 1, 'L');
         jogador2.posicionarNavio(new Submarino(), 3, 3, 'S');
+        
+        Jogo jogo = new Jogo(jogador1, jogador2);
+        jogo.iniciar();
         
         System.out.println("TABULEIRO JOGADOR 1");
         jogador1.exibirTabuleiroIndividual();

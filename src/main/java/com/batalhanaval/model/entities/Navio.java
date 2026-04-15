@@ -24,7 +24,7 @@ public abstract class Navio {
     public ArrayList<Parte> getPartes(){
         return partes;
     }
-    
+    //comentario para subir o pull
     public boolean foiAfundado() {
         for (Parte parte : partes){
             if(!parte.foiAtingida()){
