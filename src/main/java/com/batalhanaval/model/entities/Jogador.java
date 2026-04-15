@@ -21,11 +21,11 @@ public abstract class Jogador {
     }
 
     public void exibirTabuleiroIndividual() {
-        tabuleiro.exibirProprio();
+        tabuleiro.getVisaoPropria();
     }
     
     public void exibirTabuleiroInimigo(Jogador inimigo){
-        inimigo.tabuleiro.exibirInimigo();
+        inimigo.tabuleiro.getVisaoInimigo();
     }
 
 }

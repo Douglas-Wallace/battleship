@@ -1,5 +1,6 @@
 package com.batalhanaval.model.entities;
 
+import com.batalhanaval.enums.StatusCelula;
 import com.batalhanaval.model.exceptions.PosicionamentoInvalidoException;
 
 public class Tabuleiro {
@@ -17,7 +18,7 @@ public class Tabuleiro {
         }
     }
 
-    public String atacar(int linha, int coluna) {
+    public StatusCelula atacar(int linha, int coluna) {
         linha = linha - 1;
         coluna = coluna - 1;
 
@@ -28,25 +29,28 @@ public class Tabuleiro {
         Celula celula = tabuleiro[linha][coluna];
 
         if (celula.foiAtacada()) {
-            return "JA_ATACADO";
+            return StatusCelula.JA_ATACADO;
         }
 
         if (celula.temNavio()) {
             celula.atacar();
             if (celula.navioAfundado()) {
-                return "AFUNDOU";
+                return StatusCelula.AFUNDOU;
             } else {
-                return "ACERTOU";
+                return StatusCelula.ACERTOU;
             }
 
         } else {
             celula.atacar();
-            return "AGUA";
+            return StatusCelula.AGUA;
         }
 
     }
 
-    public void exibirProprio() {
+    public char[][] getVisaoPropria() {
+        
+        char[][] tabuleiroProprio = new char[tamanho][tamanho];
+        
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
 
@@ -54,20 +58,45 @@ public class Tabuleiro {
 
                 if (celula.temNavio()) {
                     if (celula.navioAfundado()) {
-                        System.out.print("- ");
+                        tabuleiroProprio[i][j] = '-';
                     } else if (celula.getParte().foiAtingida()) {
-                        System.out.print("X ");
+                        tabuleiroProprio[i][j] = 'X';
                     } else {
-                        System.out.print("N ");
+                        tabuleiroProprio[i][j] = 'N';
                     }
                 } else if (celula.foiAtacada()) {
-                    System.out.print("O ");
+                    tabuleiroProprio[i][j] = 'O';
                 } else {
-                    System.out.print("~ ");
+                    tabuleiroProprio[i][j] = '~';
                 }
             }
-            System.out.println();
         }
+        
+        return tabuleiroProprio;
+    }
+    
+    public char[][] getVisaoInimigo() {
+        
+        char[][] tabuleiroInimigo = new char[tamanho][tamanho];
+        
+        for (int i = 0; i < tamanho; i++) {
+            for (int j = 0; j < tamanho; j++) {
+
+                Celula celula = tabuleiro[i][j];
+
+                if (!celula.foiAtacada()) {
+                    tabuleiroInimigo[i][j] = '~';  
+                } else if (!celula.temNavio()) {
+                    tabuleiroInimigo[i][j] = 'O'; 
+                } else if(celula.navioAfundado()) {
+                    tabuleiroInimigo[i][j] = '-';  
+                } else {
+                    tabuleiroInimigo[i][j] = 'X'; 
+                }
+            }
+        }
+        
+        return tabuleiroInimigo;
     }
 
     public void adicionarNavio(Navio navio, int linha, int coluna, char direcao) {
@@ -148,30 +177,5 @@ public class Tabuleiro {
         return true;
     }
 
-    //Exibir tabuleiro inimigo
-    public void exibirInimigo() {
-        for (int i = 0; i < tamanho; i++) {
-            for (int j = 0; j < tamanho; j++) {
-
-                Celula celula = tabuleiro[i][j];
-
-                if (celula.foiAtacada()) {
-
-                    if (celula.temNavio()) {
-                        if (celula.navioAfundado()) {
-                            System.out.print("- ");
-                        } else {
-                            System.out.print("X ");
-                        }
-                    } else {
-                        System.out.print("O ");
-                    }
-
-                } else {
-                    System.out.print("~ ");
-                }
-            }
-            System.out.println();
-        }
-    }
+    
 }
