@@ -21,11 +21,11 @@ public abstract class Jogador {
     }
 
     public void exibirTabuleiroIndividual() {
-        tabuleiro.exibirProprio();
+        tabuleiro.getVisaoPropria();
     }
-
-    public void exibirTabuleiroInimigo(Jogador inimigo) {
-        inimigo.tabuleiro.exibirInimigo();
+    
+    public void exibirTabuleiroInimigo(Jogador inimigo){
+        inimigo.tabuleiro.getVisaoInimigo();
     }
 
     public boolean naviosAfundados() {

@@ -36,19 +36,18 @@ public class Batalhanaval {
         try{
             System.out.println("-------------------------");
             tabuleiro.adicionarNavio(submarino, 9, 5, 'S');
-            tabuleiro.exibirProprio();
+            tabuleiro.getVisaoPropria();
             System.out.println("-------------------------");
             tabuleiro.adicionarNavio(carrier, 4, 5, 'L');
-            tabuleiro.exibirProprio();
-            
+            tabuleiro.getVisaoPropria();
             
             System.out.println("-------------------------");
             System.out.println(tabuleiro.atacar(9, 5));
-            tabuleiro.exibirProprio();
+            tabuleiro.getVisaoPropria();
      
             System.out.println("-------------------------");
             System.out.println(tabuleiro.atacar(10, 5));
-            tabuleiro.exibirProprio();
+            tabuleiro.getVisaoPropria();
     
         } catch(RuntimeException e) {
             e.printStackTrace();
