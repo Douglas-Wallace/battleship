@@ -1,5 +1,6 @@
 package com.batalhanaval.model.entities;
 
+import com.batalhanaval.enums.Direcao;
 import com.batalhanaval.enums.StatusCelula;
 import com.batalhanaval.model.exceptions.PosicionamentoInvalidoException;
 
@@ -19,8 +20,6 @@ public class Tabuleiro {
     }
 
     public StatusCelula atacar(int linha, int coluna) {
-        linha = linha - 1;
-        coluna = coluna - 1;
 
         if (!estaDentroDoTabuleiro(linha, coluna)) {
             throw new PosicionamentoInvalidoException("Tabuleiro - posição invalida");
@@ -99,7 +98,7 @@ public class Tabuleiro {
         return tabuleiroInimigo;
     }
 
-    public void adicionarNavio(Navio navio, int linha, int coluna, char direcao) {
+    public void adicionarNavio(Navio navio, int linha, int coluna, Direcao direcao) {
         linha = linha - 1;
         coluna = coluna - 1;
         validarDirecao(direcao);
@@ -128,27 +127,27 @@ public class Tabuleiro {
 
     }
 
-    public void validarDirecao(char direcao) {
-        if (direcao != 'N' && direcao != 'S' && direcao != 'O' && direcao != 'L') {
+    public void validarDirecao(Direcao direcao) {
+        if (direcao != Direcao.NORTE && direcao != Direcao.SUL && direcao != Direcao.OESTE && direcao != Direcao.LESTE) {
             throw new RuntimeException("Tabuleiro - Direção inválida");
         }
     }
 
-    private int[] calcularPosicao(int linha, int coluna, char direcao, int i) {
+    private int[] calcularPosicao(int linha, int coluna, Direcao direcao, int i) {
         int novaLinha = linha;
         int novaColuna = coluna;
 
         switch (direcao) {
-            case 'N':
+            case Direcao.NORTE:
                 novaLinha = linha - i;
                 break;
-            case 'S':
+            case Direcao.SUL:
                 novaLinha = linha + i;
                 break;
-            case 'L':
+            case Direcao.LESTE:
                 novaColuna = coluna + i;
                 break;
-            case 'O':
+            case Direcao.OESTE:
                 novaColuna = coluna - i;
                 break;
         }
