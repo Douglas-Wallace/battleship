@@ -15,39 +15,19 @@ public class Batalhanaval {
         Tabuleiro tabuleiro = new Tabuleiro();
         Navio submarino = new Submarino();
         Navio carrier = new PortaAvioes();
-        
-        //Testando visualização navio inimigo
-        Jogador jogador1 = new JogadorTerminal("Jogador 1");
-        Jogador jogador2 = new JogadorTerminal("Jogador 2");
-        
-        jogador1.posicionarNavio(new PortaAvioes(), 1, 1, 'L');
-        jogador2.posicionarNavio(new Submarino(), 3, 3, 'S');
-        
-        Jogo jogo = new Jogo(jogador1, jogador2);
-        jogo.iniciar();
-        
-        System.out.println("TABULEIRO JOGADOR 1");
-        jogador1.exibirTabuleiroIndividual();
-        
-        System.out.println("TABULEIRO JOGADOR 2");
-        jogador2.exibirTabuleiroInimigo(jogador2);
+           
+       
         
         
         try{
-            System.out.println("-------------------------");
-            tabuleiro.adicionarNavio(submarino, 9, 5, 'S');
-            tabuleiro.getVisaoPropria();
-            System.out.println("-------------------------");
-            tabuleiro.adicionarNavio(carrier, 4, 5, 'L');
-            tabuleiro.getVisaoPropria();
-            
-            System.out.println("-------------------------");
-            System.out.println(tabuleiro.atacar(9, 5));
-            tabuleiro.getVisaoPropria();
-     
-            System.out.println("-------------------------");
-            System.out.println(tabuleiro.atacar(10, 5));
-            tabuleiro.getVisaoPropria();
+            Jogador jogador1 = new JogadorTerminal("Douglas");
+            Jogador jogador2 = new JogadorTerminal("Isabella");
+        
+            jogador1.posicionarNavio(new PortaAvioes(), 1, 1, 'L');
+            jogador2.posicionarNavio(new Submarino(), 3, 3, 'S');
+        
+            Jogo jogo = new Jogo(jogador1, jogador2);
+            jogo.iniciar();
     
         } catch(RuntimeException e) {
             e.printStackTrace();

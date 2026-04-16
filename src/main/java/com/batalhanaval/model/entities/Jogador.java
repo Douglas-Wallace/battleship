@@ -21,13 +21,60 @@ public abstract class Jogador {
     }
 
     public void exibirTabuleiroIndividual() {
-        tabuleiro.getVisaoPropria();
+        char[][] tabuleiroProprio = tabuleiro.getVisaoPropria();
+        
+        for(int i = 0; i < tabuleiro.getTamanho(); i++){
+            for(int j = 0; j < tabuleiro.getTamanho(); j++){
+                switch (tabuleiroProprio[i][j]) {
+                    case '~':
+                        System.out.print("~ ");
+                        break;
+                    case 'X':
+                        System.out.print("X ");
+                        break;
+                    case '-':
+                        System.out.print("- ");
+                        break;
+                    case 'O':
+                        System.out.print("O ");
+                        break;
+                    case 'N':
+                        System.out.print("N ");
+                        break;    
+                    default:
+                        throw new AssertionError();
+                }
+            }
+            System.out.println("");
+        }
     }
     
     public void exibirTabuleiroInimigo(Jogador inimigo){
-        inimigo.tabuleiro.getVisaoInimigo();
+        char[][] tabuleiroInimigo = inimigo.tabuleiro.getVisaoInimigo();
+        
+        for(int i = 0; i < tabuleiro.getTamanho(); i++){
+            for(int j = 0; j < tabuleiro.getTamanho(); j++){
+                switch (tabuleiroInimigo[i][j]) {
+                    case '~':
+                        System.out.print("~ ");
+                        break;
+                    case 'X':
+                        System.out.print("X ");
+                        break;
+                    case '-':
+                        System.out.print("- ");
+                        break;
+                    case 'O':
+                        System.out.print("O ");
+                        break;
+                    default:
+                        throw new AssertionError();
+                }
+            }
+            System.out.println("");
+        }
     }
-
+       
     public boolean naviosAfundados() {
         return tabuleiro.naviosAfundados();
     }

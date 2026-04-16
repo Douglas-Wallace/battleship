@@ -1,5 +1,6 @@
 package com.batalhanaval.model.entities;
 
+import com.batalhanaval.enums.StatusCelula;
 import java.util.Scanner;
 
 public class JogadorTerminal extends Jogador{
@@ -21,7 +22,7 @@ public class JogadorTerminal extends Jogador{
         System.out.println("Digite a coluna: ");
         int coluna = sc.nextInt();
         
-        String resultado = inimigo.tabuleiro.atacar(linha, coluna);
+        StatusCelula resultado = inimigo.tabuleiro.atacar(linha, coluna);
         
         System.out.println("Resultado: " + resultado);
     }
