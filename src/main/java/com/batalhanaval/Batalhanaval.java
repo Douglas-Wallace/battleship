@@ -10,7 +10,7 @@ import com.batalhanaval.model.entities.JogadorTerminal;
 import com.batalhanaval.model.entities.Jogo;
 
 public class Batalhanaval {
-    // MAIN PRA TESTES
+    
     public static void main(String[] args){
 
         try{
@@ -27,6 +27,6 @@ public class Batalhanaval {
             e.printStackTrace();
         }
         
-        
+             
     }
 } 
