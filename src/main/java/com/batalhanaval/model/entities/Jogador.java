@@ -11,7 +11,7 @@ public abstract class Jogador {
         this.tabuleiro = new Tabuleiro();
     }
 
-    public abstract void jogar();
+    public abstract void jogar(Jogador inimigo);
 
     public abstract void exibirTabuleiro();
 
@@ -26,6 +26,10 @@ public abstract class Jogador {
     
     public void exibirTabuleiroInimigo(Jogador inimigo){
         inimigo.tabuleiro.getVisaoInimigo();
+    }
+
+    public boolean naviosAfundados() {
+        return tabuleiro.naviosAfundados();
     }
 
 }
