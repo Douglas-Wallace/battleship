@@ -30,11 +30,9 @@ public class Jogo {
             
             System.out.println("\nTabuleiro inimigo: ");
             jogadorAtual.exibirTabuleiroInimigo(jogadorInimigo);
+              
+            executarTurno();
             
-            //faz jogada
-            jogadorAtual.jogar(jogadorInimigo);
-            
-            //vitória
             if(verificarVitoria()){
                 System.out.println("\n Vencedor: " + jogadorAtual.getNome());
                 break;
@@ -42,6 +40,10 @@ public class Jogo {
             
             trocarTurno();
         }
+    }
+    
+    private void executarTurno(){
+        jogadorAtual.atacar(jogadorInimigo);
     }
     
     private void trocarTurno() {

@@ -13,7 +13,7 @@ public abstract class Jogador {
         this.tabuleiro = new Tabuleiro();
     }
 
-    public abstract void jogar(Jogador inimigo);
+    public abstract void atacar(Jogador inimigo);
     public abstract void exibirTabuleiroIndividual();
     public abstract void exibirTabuleiroInimigo(Jogador inimigo);
 
