@@ -23,7 +23,7 @@ public class Jogo {
         while(true) {
             
             System.out.println("\n----------------");
-            System.out.println("Vez de: " + jogadorAtual.nome);
+            System.out.println("Vez de: " + jogadorAtual.getNome());
             
             System.out.println("\nSeu tabuleiro: ");
             jogadorAtual.exibirTabuleiroIndividual();
@@ -36,7 +36,7 @@ public class Jogo {
             
             //vitória
             if(verificarVitoria()){
-                System.out.println("\n Vencedor: " + jogadorAtual.nome);
+                System.out.println("\n Vencedor: " + jogadorAtual.getNome());
                 break;
             }
             
