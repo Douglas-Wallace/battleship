@@ -45,27 +45,32 @@ public class JogadorTerminal extends Jogador{
     public void atacar(Jogador inimigo){
         StatusCelula resultado;
         
-            do {
-                try{
-                    System.out.println("Digite a linha: ");
-                    int linha = sc.nextInt();
-                    linha--;
+        do {
+            try{
                     
-                    System.out.println("Digite a coluna: ");
-                    int coluna = sc.nextInt();
-                    coluna--;
+                System.out.println("Digite a cordenada: ");
+                String entrada = sc.next();
+
+                char colunaChar = entrada.toUpperCase().charAt(0);
+                int coluna = colunaChar - 'A';
+                int linha = Integer.parseInt(entrada.substring(1));
+                linha--;
+                System.out.println("coluna: " + coluna);
+                System.out.println("linha: " + linha);
+
         
-                    resultado = inimigo.tabuleiro.atacar(linha, coluna);
+                resultado = inimigo.tabuleiro.atacar(linha, coluna);
         
-                    System.out.println("Resultado: " + resultado);
-                } catch (PosicionamentoInvalidoException e) {
-                     e.printStackTrace();
-                     resultado = null;
+                System.out.println("Resultado: " + resultado);
+            } catch (PosicionamentoInvalidoException e) {
+                System.out.println("Posição inválida. Tente novamente.");
+                resultado = null;
+            } catch (Exception e) {
+                    System.out.println("Entrada inválida. Tente novamente.");
+                    sc.nextLine();
+                    resultado = null;
                 }
             } while(resultado == StatusCelula.JA_ATACADO || resultado == null);
-            
-        
-        
     }
     
 }
