@@ -104,7 +104,7 @@ public class Tabuleiro {
         validarDirecao(direcao);
 
         //validação
-        for (int i = 0; i < navio.getTamanho(); i++) {
+        for (int i = 0; i < navio.getTipo().getTamanho(); i++) {
             int pos[] = calcularPosicao(linha, coluna, direcao, i);
             int parteLinha = pos[0];
             int parteColuna = pos[1];
@@ -116,7 +116,7 @@ public class Tabuleiro {
         }
 
         //inserção
-        for (int i = 0; i < navio.getTamanho(); i++) {
+        for (int i = 0; i < navio.getTipo().getTamanho(); i++) {
             int pos[] = calcularPosicao(linha, coluna, direcao, i);
             int parteLinha = pos[0];
             int parteColuna = pos[1];
