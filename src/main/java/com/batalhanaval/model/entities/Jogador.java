@@ -1,33 +1,32 @@
 package com.batalhanaval.model.entities;
 
+
 import com.batalhanaval.enums.Direcao;
+import com.batalhanaval.model.entities.Navio;
+import com.batalhanaval.model.entities.Tabuleiro;
 
 public abstract class Jogador {
 
-    protected Tabuleiro tabuleiro;
     protected String nome;
+    protected Tabuleiro tabuleiro;
 
     public Jogador(String nome) {
         this.nome = nome;
-
         this.tabuleiro = new Tabuleiro();
     }
 
-    public abstract void atacar(Jogador inimigo);
-    public abstract void exibirTabuleiroIndividual();
-    public abstract void exibirTabuleiroInimigo(Jogador inimigo);
-
-    public void posicionarNavio(Navio navio, int linha, int coluna, Direcao direcao) {
-        tabuleiro.adicionarNavio(navio, linha, coluna, direcao);
-
+    public String getNome() {
+        return nome;
     }
-       
+
+    public Tabuleiro getTabuleiro() {
+        return tabuleiro;
+    }
+
     public boolean naviosAfundados() {
         return tabuleiro.naviosAfundados();
     }
     
-    public String getNome(){
-        return nome;
-    }
-
+    public  abstract void posicionarNavios();
+    public abstract void atacar(Jogador inimigo);
 }

@@ -16,8 +16,8 @@ public class Batalhanaval {
             Jogador jogador1 = new JogadorTerminal("Douglas");
             Jogador jogador2 = new JogadorTerminal("Isabella");
         
-            jogador1.posicionarNavio(new Navio(TipoNavio.PORTA_AVIAO), 1, 1, Direcao.LESTE);
-            jogador2.posicionarNavio(new Navio(TipoNavio.SUBMARINO), 3, 3, Direcao.SUL);
+            jogador1.posicionarNavios();
+            jogador2.posicionarNavios();
         
             Jogo jogo = new Jogo(jogador1, jogador2);
             jogo.iniciar();
