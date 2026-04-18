@@ -1,4 +1,4 @@
-package com.batalhanaval.enums;
+package com.batalhanaval.model.enums;
 
 //Criando quantos navios podem existir de cada tipo
 public enum TipoNavio {

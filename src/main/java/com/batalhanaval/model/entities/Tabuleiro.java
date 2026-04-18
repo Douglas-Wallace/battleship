@@ -1,8 +1,8 @@
 package com.batalhanaval.model.entities;
 
-import com.batalhanaval.enums.TipoNavio;
-import com.batalhanaval.enums.Direcao;
-import com.batalhanaval.enums.StatusCelula;
+import com.batalhanaval.model.enums.TipoNavio;
+import com.batalhanaval.model.enums.Direcao;
+import com.batalhanaval.model.enums.StatusCelula;
 import com.batalhanaval.model.exceptions.PosicionamentoInvalidoException;
 
 public class Tabuleiro {
@@ -130,18 +130,11 @@ public class Tabuleiro {
         int novaColuna = coluna;
 
         switch (direcao) {
-            case Direcao.NORTE:
-                novaLinha = linha - i;
-                break;
-            case Direcao.SUL:
-                novaLinha = linha + i;
-                break;
-            case Direcao.LESTE:
-                novaColuna = coluna + i;
-                break;
-            case Direcao.OESTE:
-                novaColuna = coluna - i;
-                break;
+            case Direcao.NORTE -> novaLinha = linha - i;
+            case Direcao.SUL -> novaLinha = linha + i;
+            case Direcao.LESTE -> novaColuna = coluna + i;
+            case Direcao.OESTE -> novaColuna = coluna - i;
+    
         }
 
         return new int[]{novaLinha, novaColuna};

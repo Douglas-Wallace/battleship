@@ -1,14 +1,15 @@
 package com.batalhanaval.model.entities;
 
-
-import com.batalhanaval.enums.Direcao;
+import com.batalhanaval.model.enums.Direcao;
 import com.batalhanaval.model.entities.Navio;
 import com.batalhanaval.model.entities.Tabuleiro;
+import com.batalhanaval.model.enums.StatusCelula;
+import com.batalhanaval.model.enums.TipoNavio;
 
-public abstract class Jogador {
+public class Jogador {
 
-    protected String nome;
-    protected Tabuleiro tabuleiro;
+    private final String nome;
+    private final Tabuleiro tabuleiro;
 
     public Jogador(String nome) {
         this.nome = nome;
@@ -26,7 +27,12 @@ public abstract class Jogador {
     public boolean naviosAfundados() {
         return tabuleiro.naviosAfundados();
     }
-    
-    public  abstract void posicionarNavios();
-    public abstract void atacar(Jogador inimigo);
+
+    public StatusCelula atacar(Jogador inimigo, int linha, int coluna) {
+        return inimigo.getTabuleiro().atacar(linha, coluna);
+    }
+
+    public void posicionarNavio(TipoNavio tipo, int linha, int coluna, Direcao direcao) {
+        tabuleiro.adicionarNavio(new Navio(tipo), linha, coluna, direcao);
+    }
 }
