@@ -1,6 +1,6 @@
 package com.batalhanaval.model.entities;
 
-import com.batalhanaval.enums.TipoNavio;
+import com.batalhanaval.model.enums.TipoNavio;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
