@@ -1,5 +1,6 @@
 package com.batalhanaval.model.entities;
 
+import com.batalhanaval.enums.TipoNavio;
 import com.batalhanaval.enums.Direcao;
 import com.batalhanaval.enums.StatusCelula;
 import com.batalhanaval.model.exceptions.PosicionamentoInvalidoException;
@@ -20,7 +21,6 @@ public class Tabuleiro {
     }
 
     public StatusCelula atacar(int linha, int coluna) {
-
         if (!estaDentroDoTabuleiro(linha, coluna)) {
             throw new PosicionamentoInvalidoException("Tabuleiro - posição invalida");
         }
@@ -47,9 +47,9 @@ public class Tabuleiro {
     }
 
     public char[][] getVisaoPropria() {
-        
+
         char[][] tabuleiroProprio = new char[tamanho][tamanho];
-        
+
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
 
@@ -70,66 +70,58 @@ public class Tabuleiro {
                 }
             }
         }
-        
         return tabuleiroProprio;
     }
-    
+
     public char[][] getVisaoInimigo() {
-        
+
         char[][] tabuleiroInimigo = new char[tamanho][tamanho];
-        
+
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
 
                 Celula celula = tabuleiro[i][j];
 
                 if (!celula.foiAtacada()) {
-                    tabuleiroInimigo[i][j] = '~';  
+                    tabuleiroInimigo[i][j] = '~';
                 } else if (!celula.temNavio()) {
-                    tabuleiroInimigo[i][j] = 'O'; 
-                } else if(celula.navioAfundado()) {
-                    tabuleiroInimigo[i][j] = '-';  
+                    tabuleiroInimigo[i][j] = 'O';
+                } else if (celula.navioAfundado()) {
+                    tabuleiroInimigo[i][j] = '-';
                 } else {
-                    tabuleiroInimigo[i][j] = 'X'; 
+                    tabuleiroInimigo[i][j] = 'X';
                 }
             }
         }
-        
+
         return tabuleiroInimigo;
     }
 
     public void adicionarNavio(Navio navio, int linha, int coluna, Direcao direcao) {
-        linha = linha - 1;
-        coluna = coluna - 1;
         validarDirecao(direcao);
 
-        //validação
         for (int i = 0; i < navio.getTipo().getTamanho(); i++) {
-            int pos[] = calcularPosicao(linha, coluna, direcao, i);
+            int[] pos = calcularPosicao(linha, coluna, direcao, i);
             int parteLinha = pos[0];
             int parteColuna = pos[1];
 
             if (!estaDentroDoTabuleiro(parteLinha, parteColuna) || !podePosicionar(parteLinha, parteColuna)) {
                 throw new PosicionamentoInvalidoException("Tabuleiro - posição invalida");
             }
-
         }
 
-        //inserção
         for (int i = 0; i < navio.getTipo().getTamanho(); i++) {
-            int pos[] = calcularPosicao(linha, coluna, direcao, i);
+            int[] pos = calcularPosicao(linha, coluna, direcao, i);
             int parteLinha = pos[0];
             int parteColuna = pos[1];
 
             tabuleiro[parteLinha][parteColuna].setParte(navio.getPartes().get(i));
-
         }
-
     }
 
     public void validarDirecao(Direcao direcao) {
         if (direcao != Direcao.NORTE && direcao != Direcao.SUL && direcao != Direcao.OESTE && direcao != Direcao.LESTE) {
-            throw new RuntimeException("Tabuleiro - Direção inválida");
+            throw new PosicionamentoInvalidoException("Direção inválida");
         }
     }
 
@@ -175,14 +167,14 @@ public class Tabuleiro {
         }
         return true;
     }
-    
+
     public boolean naviosAfundados() {
-        for(int i = 0; i < tamanho; i++){
-            for(int j = 0; j < tamanho; j++){
+        for (int i = 0; i < tamanho; i++) {
+            for (int j = 0; j < tamanho; j++) {
 
                 Celula celula = tabuleiro[i][j];
 
-                if(celula.temNavio() && !celula.navioAfundado()) {
+                if (celula.temNavio() && !celula.navioAfundado()) {
                     return false;
                 }
             }
@@ -190,8 +182,8 @@ public class Tabuleiro {
 
         return true;
     }
-    
-    public int getTamanho(){
+
+    public int getTamanho() {
         return tamanho;
     }
 }
