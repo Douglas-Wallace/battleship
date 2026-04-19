@@ -3,6 +3,7 @@ package com.batalhanaval.view;
 import com.batalhanaval.model.entities.Jogador;
 import com.batalhanaval.model.enums.StatusCelula;
 
+
 public class ConsoleView {
 
     public void mostrarMensagem(String mensagem) {

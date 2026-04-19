@@ -106,7 +106,7 @@ public class Tabuleiro {
             int parteColuna = pos[1];
 
             if (!estaDentroDoTabuleiro(parteLinha, parteColuna) || !podePosicionar(parteLinha, parteColuna)) {
-                throw new PosicionamentoInvalidoException("Tabuleiro - posição invalida");
+                throw new PosicionamentoInvalidoException("Posição invalida");
             }
         }
 
@@ -120,7 +120,7 @@ public class Tabuleiro {
     }
 
     public void validarDirecao(Direcao direcao) {
-        if (direcao != Direcao.NORTE && direcao != Direcao.SUL && direcao != Direcao.OESTE && direcao != Direcao.LESTE) {
+        if (direcao == null) {
             throw new PosicionamentoInvalidoException("Direção inválida");
         }
     }

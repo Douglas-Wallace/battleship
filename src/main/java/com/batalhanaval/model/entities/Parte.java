@@ -1,7 +1,7 @@
 package com.batalhanaval.model.entities;
 
 public class Parte {
-    private Navio navio;
+    private final Navio navio;
     private boolean atingida;
 
     public Parte(Navio navio){
