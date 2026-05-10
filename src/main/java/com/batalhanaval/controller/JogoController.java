@@ -6,6 +6,7 @@ import com.batalhanaval.model.enums.Direcao;
 import com.batalhanaval.model.enums.StatusCelula;
 import com.batalhanaval.model.enums.TipoNavio;
 import com.batalhanaval.model.exceptions.PosicionamentoInvalidoException;
+import com.batalhanaval.model.util.CoordenadaParser;
 import com.batalhanaval.view.ConsoleView;
 import java.util.Scanner;
 
@@ -22,33 +23,8 @@ public class JogoController {
     }
 
     public void iniciar() {
-        posicionarNavios(jogo.getJogadorAtual());
-        jogo.trocarTurno();
-        posicionarNavios(jogo.getJogadorAtual());
-        jogo.trocarTurno();
-
-        while (!jogo.terminou()) {
-            Jogador atual = jogo.getJogadorAtual();
-            Jogador inimigo = jogo.getJogadorInimigo();
-
-            view.mostrarMensagem("\n----------------");
-            view.mostrarMensagem("Vez de: " + atual.getNome());
-
-            view.mostrarMensagem("\nSeu tabuleiro:");
-            view.exibirTabuleiro(atual);
-
-            view.mostrarMensagem("\nTabuleiro inimigo:");
-            view.exibirTabuleiroComMascara(inimigo);
-
-            realizarAtaque(atual, inimigo);
-
-            if (jogo.terminou()) {
-                view.mostrarMensagem("\nVencedor: " + atual.getNome());
-                break;
-            }
-
-            jogo.trocarTurno();
-        }
+        fasePosicionamento();
+        faseBatalha();
     }
 
     private void posicionarNavios(Jogador jogador) {
@@ -103,9 +79,9 @@ public class JogoController {
             throw new IllegalArgumentException("Coordenada inválida");
         }
 
-        char colunaChar = entrada.charAt(0);
-        int coluna = colunaChar - 'A';
-        int linha = Integer.parseInt(entrada.substring(1)) - 1;
+        int[] coord = CoordenadaParser.parse(entrada);
+        int linha = coord[0];
+        int coluna = coord[1];
 
         int tamanho = jogador.getTabuleiro().getTamanho();
 
@@ -121,11 +97,53 @@ public class JogoController {
         String entrada = sc.next().toUpperCase();
 
         return switch (entrada) {
-            case "N" -> Direcao.NORTE;
-            case "S" -> Direcao.SUL;
-            case "L" -> Direcao.LESTE;
-            case "O" -> Direcao.OESTE;
-            default -> throw new IllegalArgumentException("Direção inválida");
+            case "N" ->
+                Direcao.NORTE;
+            case "S" ->
+                Direcao.SUL;
+            case "L" ->
+                Direcao.LESTE;
+            case "O" ->
+                Direcao.OESTE;
+            default ->
+                throw new IllegalArgumentException("Direção inválida");
         };
+    }
+
+    private void fasePosicionamento() {
+        posicionarNavios(jogo.getJogadorAtual());
+        jogo.trocarTurno();
+        posicionarNavios(jogo.getJogadorAtual());
+        jogo.trocarTurno();
+    }
+
+    private void faseBatalha() {
+        while (!jogo.terminou()) {
+            Jogador atual = jogo.getJogadorAtual();
+            Jogador inimigo = jogo.getJogadorInimigo();
+
+            executarTurno(atual, inimigo);
+
+            if (jogo.terminou()) {
+                view.mostrarMensagem("\nVencedor: " + atual.getNome());
+                break;
+            }
+
+            jogo.trocarTurno();
+        }
+    }
+
+    private void executarTurno(Jogador atual, Jogador inimigo) {
+
+        view.mostrarMensagem("\n----------------");
+        view.mostrarMensagem("Vez de: " + atual.getNome());
+
+        view.mostrarMensagem("\nSeu tabuleiro:");
+        view.exibirTabuleiro(atual);
+
+        view.mostrarMensagem("\nTabuleiro inimigo:");
+        view.exibirTabuleiroComMascara(inimigo);
+
+        realizarAtaque(atual, inimigo);
     }
 }

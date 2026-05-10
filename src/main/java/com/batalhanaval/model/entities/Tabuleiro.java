@@ -8,7 +8,7 @@ import com.batalhanaval.model.exceptions.PosicionamentoInvalidoException;
 public class Tabuleiro {
 
     private final int tamanho = 10;
-    private Celula[][] tabuleiro;
+    private final Celula[][] tabuleiro;
 
     public Tabuleiro() {
         tabuleiro = new Celula[tamanho][tamanho];
@@ -46,57 +46,6 @@ public class Tabuleiro {
 
     }
 
-    public char[][] getVisaoPropria() {
-
-        char[][] tabuleiroProprio = new char[tamanho][tamanho];
-
-        for (int i = 0; i < tamanho; i++) {
-            for (int j = 0; j < tamanho; j++) {
-
-                Celula celula = tabuleiro[i][j];
-
-                if (celula.temNavio()) {
-                    if (celula.navioAfundado()) {
-                        tabuleiroProprio[i][j] = '-';
-                    } else if (celula.getParte().foiAtingida()) {
-                        tabuleiroProprio[i][j] = 'X';
-                    } else {
-                        tabuleiroProprio[i][j] = 'N';
-                    }
-                } else if (celula.foiAtacada()) {
-                    tabuleiroProprio[i][j] = 'O';
-                } else {
-                    tabuleiroProprio[i][j] = '~';
-                }
-            }
-        }
-        return tabuleiroProprio;
-    }
-
-    public char[][] getVisaoInimigo() {
-
-        char[][] tabuleiroInimigo = new char[tamanho][tamanho];
-
-        for (int i = 0; i < tamanho; i++) {
-            for (int j = 0; j < tamanho; j++) {
-
-                Celula celula = tabuleiro[i][j];
-
-                if (!celula.foiAtacada()) {
-                    tabuleiroInimigo[i][j] = '~';
-                } else if (!celula.temNavio()) {
-                    tabuleiroInimigo[i][j] = 'O';
-                } else if (celula.navioAfundado()) {
-                    tabuleiroInimigo[i][j] = '-';
-                } else {
-                    tabuleiroInimigo[i][j] = 'X';
-                }
-            }
-        }
-
-        return tabuleiroInimigo;
-    }
-
     public void adicionarNavio(Navio navio, int linha, int coluna, Direcao direcao) {
         validarDirecao(direcao);
 
@@ -106,7 +55,7 @@ public class Tabuleiro {
             int parteColuna = pos[1];
 
             if (!estaDentroDoTabuleiro(parteLinha, parteColuna) || !podePosicionar(parteLinha, parteColuna)) {
-                throw new PosicionamentoInvalidoException("Tabuleiro - posição invalida");
+                throw new PosicionamentoInvalidoException("Posição invalida");
             }
         }
 
@@ -120,7 +69,7 @@ public class Tabuleiro {
     }
 
     public void validarDirecao(Direcao direcao) {
-        if (direcao != Direcao.NORTE && direcao != Direcao.SUL && direcao != Direcao.OESTE && direcao != Direcao.LESTE) {
+        if (direcao == null) {
             throw new PosicionamentoInvalidoException("Direção inválida");
         }
     }
@@ -141,10 +90,7 @@ public class Tabuleiro {
     }
 
     public boolean estaDentroDoTabuleiro(int linha, int coluna) {
-        if (linha < 0 || linha >= tamanho || coluna < 0 || coluna >= tamanho) {
-            return false;
-        }
-        return true;
+        return linha >= 0 && linha < tamanho && coluna >= 0 && coluna < tamanho;
     }
 
     public boolean podePosicionar(int linha, int coluna) {
@@ -178,5 +124,9 @@ public class Tabuleiro {
 
     public int getTamanho() {
         return tamanho;
+    }
+    
+    public Celula getCelula(int linha, int coluna){
+        return tabuleiro[linha][coluna];
     }
 }

@@ -2,13 +2,11 @@ package com.batalhanaval.model.enums;
 
 //Criando quantos navios podem existir de cada tipo
 public enum TipoNavio {
-    PORTA_AVIOES(5, 1, "Porta-aviões"),
-    CRUZADOR(3, 2, "Cruzador"),
-    DESTROYER(2, 3, "Destroyer"),
-    SUBMARINO(1, 4, "Submarino");   
+    PORTA_AVIAO(5, 1, "Porta Aviao"),
+    SUBMARINO(2, 2, "Submarino");
     
-    private final int tamanho;
     private final int limite;
+    private final int tamanho;
     private final String nome;
     
     TipoNavio(int tamanho, int limite, String nome){
@@ -24,7 +22,7 @@ public enum TipoNavio {
     public String getNome() {
         return nome;
     }
-    
+    //Acessar o limite na hora da validação
     public int getLimite(){
         return limite;
     }
