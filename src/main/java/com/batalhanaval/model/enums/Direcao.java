@@ -1,5 +1,5 @@
 
-package com.batalhanaval.enums;
+package com.batalhanaval.model.enums;
 
 public enum Direcao {
     NORTE,
