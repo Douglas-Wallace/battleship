@@ -6,7 +6,7 @@ public class CoordenadaParser {
         entrada = entrada.toUpperCase();
 
         char colunaChar = entrada.charAt(0);
-        int coluna = colunaChar - 'A';
+        int coluna = colunaChar - 'A'; // A = 65 em Unicode/ASCII
 
         int linha = Integer.parseInt(entrada.substring(1)) - 1;
 

@@ -1,4 +1,4 @@
-package com.batalhanaval.model.util;
+package com.batalhanaval.view;
 
 import com.batalhanaval.model.entities.Celula;
 import com.batalhanaval.model.entities.Tabuleiro;

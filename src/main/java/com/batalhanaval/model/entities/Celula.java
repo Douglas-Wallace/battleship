@@ -4,6 +4,9 @@ public class Celula {
     private Parte parte; //null = aguá
     private boolean atacada;
     
+    public Celula(){
+    }
+    
     public boolean temNavio(){
         return parte != null;              
     }

@@ -1,6 +1,5 @@
 package com.batalhanaval.model.entities;
 
-import com.batalhanaval.model.enums.TipoNavio;
 import com.batalhanaval.model.enums.Direcao;
 import com.batalhanaval.model.enums.StatusCelula;
 import com.batalhanaval.model.exceptions.PosicionamentoInvalidoException;
@@ -17,6 +16,28 @@ public class Tabuleiro {
             for (int coluna = 0; coluna < tamanho; coluna++) {
                 tabuleiro[linha][coluna] = new Celula();
             }
+        }
+    }
+    
+    public void adicionarNavio(Navio navio, int linha, int coluna, Direcao direcao) {
+        validarDirecao(direcao);
+
+        for (int i = 0; i < navio.getTipo().getTamanho(); i++) {
+            int[] pos = calcularPosicao(linha, coluna, direcao, i);
+            int parteLinha = pos[0];
+            int parteColuna = pos[1];
+
+            if (!estaDentroDoTabuleiro(parteLinha, parteColuna) || !podePosicionar(parteLinha, parteColuna)) {
+                throw new PosicionamentoInvalidoException("Posição invalida");
+            }
+        }
+
+        for (int i = 0; i < navio.getTipo().getTamanho(); i++) {
+            int[] pos = calcularPosicao(linha, coluna, direcao, i);
+            int parteLinha = pos[0];
+            int parteColuna = pos[1];
+
+            tabuleiro[parteLinha][parteColuna].setParte(navio.getPartes().get(i));
         }
     }
 
@@ -46,27 +67,6 @@ public class Tabuleiro {
 
     }
 
-    public void adicionarNavio(Navio navio, int linha, int coluna, Direcao direcao) {
-        validarDirecao(direcao);
-
-        for (int i = 0; i < navio.getTipo().getTamanho(); i++) {
-            int[] pos = calcularPosicao(linha, coluna, direcao, i);
-            int parteLinha = pos[0];
-            int parteColuna = pos[1];
-
-            if (!estaDentroDoTabuleiro(parteLinha, parteColuna) || !podePosicionar(parteLinha, parteColuna)) {
-                throw new PosicionamentoInvalidoException("Posição invalida");
-            }
-        }
-
-        for (int i = 0; i < navio.getTipo().getTamanho(); i++) {
-            int[] pos = calcularPosicao(linha, coluna, direcao, i);
-            int parteLinha = pos[0];
-            int parteColuna = pos[1];
-
-            tabuleiro[parteLinha][parteColuna].setParte(navio.getPartes().get(i));
-        }
-    }
 
     public void validarDirecao(Direcao direcao) {
         if (direcao == null) {

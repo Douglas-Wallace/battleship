@@ -7,11 +7,13 @@ import com.batalhanaval.model.enums.StatusCelula;
 import com.batalhanaval.model.enums.TipoNavio;
 import com.batalhanaval.model.exceptions.PosicionamentoInvalidoException;
 import com.batalhanaval.model.util.CoordenadaParser;
+import com.batalhanaval.network.ConexaoPartida;
 import com.batalhanaval.view.ConsoleView;
 import java.util.Scanner;
 
 public class JogoController {
-
+    
+    private ConexaoPartida conexao;
     private final Jogo jogo;
     private final ConsoleView view;
     private final Scanner sc;
@@ -25,6 +27,13 @@ public class JogoController {
     public void iniciar() {
         fasePosicionamento();
         faseBatalha();
+    }
+    
+    private void fasePosicionamento() {
+        posicionarNavios(jogo.getJogadorAtual());
+        jogo.trocarTurno();
+        posicionarNavios(jogo.getJogadorAtual());
+        jogo.trocarTurno();
     }
 
     private void posicionarNavios(Jogador jogador) {
@@ -52,25 +61,7 @@ public class JogoController {
             }
         }
     }
-
-    private void realizarAtaque(Jogador atacante, Jogador inimigo) {
-        StatusCelula resultado;
-
-        do {
-            try {
-                int[] coord = lerCoordenada(atacante);
-                resultado = atacante.atacar(inimigo, coord[0], coord[1]);
-                view.mostrarResultadoAtaque(resultado);
-            } catch (PosicionamentoInvalidoException e) {
-                view.mostrarMensagem("Posição inválida. Tente novamente.");
-                resultado = null;
-            } catch (Exception e) {
-                view.mostrarMensagem("Entrada inválida. Tente novamente.");
-                resultado = null;
-            }
-        } while (resultado == null || resultado == StatusCelula.JA_ATACADO);
-    }
-
+    
     private int[] lerCoordenada(Jogador jogador) {
         view.mostrarMensagem("Digite a coordenada (ex: B5): ");
         String entrada = sc.next().toUpperCase();
@@ -92,6 +83,25 @@ public class JogoController {
         return new int[]{linha, coluna};
     }
 
+    private void realizarAtaque(Jogador atacante, Jogador inimigo) {
+        StatusCelula resultado;
+
+        do {
+            try {
+                int[] coord = lerCoordenada(atacante);
+                resultado = atacante.atacar(inimigo, coord[0], coord[1]);
+                view.mostrarResultadoAtaque(resultado);
+            } catch (PosicionamentoInvalidoException e) {
+                view.mostrarMensagem("Posição inválida. Tente novamente.");
+                resultado = null;
+            } catch (Exception e) {
+                view.mostrarMensagem("Entrada inválida. Tente novamente.");
+                resultado = null;
+            }
+        } while (resultado == null || resultado == StatusCelula.JA_ATACADO);
+    }
+
+
     private Direcao lerDirecao() {
         view.mostrarMensagem("Digite a direção (N/S/L/O): ");
         String entrada = sc.next().toUpperCase();
@@ -110,12 +120,7 @@ public class JogoController {
         };
     }
 
-    private void fasePosicionamento() {
-        posicionarNavios(jogo.getJogadorAtual());
-        jogo.trocarTurno();
-        posicionarNavios(jogo.getJogadorAtual());
-        jogo.trocarTurno();
-    }
+    
 
     private void faseBatalha() {
         while (!jogo.terminou()) {

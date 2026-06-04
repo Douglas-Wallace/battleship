@@ -2,7 +2,6 @@ package com.batalhanaval.view;
 
 import com.batalhanaval.model.entities.Jogador;
 import com.batalhanaval.model.enums.StatusCelula;
-import com.batalhanaval.model.util.TabuleiroRenderer;
 
 public class ConsoleView {
 
