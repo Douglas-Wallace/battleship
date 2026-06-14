@@ -1,6 +1,5 @@
 package com.batalhanaval.view;
 
-import com.batalhanaval.model.entities.Jogador;
 import com.batalhanaval.model.enums.StatusCelula;
 
 public class ConsoleView {
@@ -26,20 +25,6 @@ public class ConsoleView {
 
             System.out.println();
         }
-    }
-
-    public void exibirTabuleiro(Jogador jogador) {
-        exibirTabuleiro(
-                TabuleiroRenderer.visaoPropria(jogador.getTabuleiro()),
-                jogador.getTabuleiro().getTamanho()
-        );
-    }
-
-    public void exibirTabuleiroComMascara(Jogador jogador) {
-        exibirTabuleiro(
-                TabuleiroRenderer.visaoInimigo(jogador.getTabuleiro()),
-                jogador.getTabuleiro().getTamanho()
-        );
     }
 
     public void mostrarResultadoAtaque(StatusCelula resultado) {

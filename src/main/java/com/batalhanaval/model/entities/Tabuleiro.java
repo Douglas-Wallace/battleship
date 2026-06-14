@@ -7,22 +7,18 @@ import com.batalhanaval.model.exceptions.PosicionamentoInvalidoException;
 public class Tabuleiro {
 
     private final int tamanho = 10;
-    private final Celula[][] tabuleiro;
+    private Celula[][] tabuleiro;
 
     public Tabuleiro() {
-        tabuleiro = new Celula[tamanho][tamanho];
-
-        for (int linha = 0; linha < tamanho; linha++) {
-            for (int coluna = 0; coluna < tamanho; coluna++) {
-                tabuleiro[linha][coluna] = new Celula();
-            }
-        }
+        setTabuleiro();
     }
-    
+
+    // Métodos de negocio
     public void adicionarNavio(Navio navio, int linha, int coluna, Direcao direcao) {
         validarDirecao(direcao);
 
         for (int i = 0; i < navio.getTipo().getTamanho(); i++) {
+
             int[] pos = calcularPosicao(linha, coluna, direcao, i);
             int parteLinha = pos[0];
             int parteColuna = pos[1];
@@ -67,44 +63,8 @@ public class Tabuleiro {
 
     }
 
-
-    public void validarDirecao(Direcao direcao) {
-        if (direcao == null) {
-            throw new PosicionamentoInvalidoException("Direção inválida");
-        }
-    }
-
-    private int[] calcularPosicao(int linha, int coluna, Direcao direcao, int i) {
-        int novaLinha = linha;
-        int novaColuna = coluna;
-
-        switch (direcao) {
-            case Direcao.NORTE -> novaLinha = linha - i;
-            case Direcao.SUL -> novaLinha = linha + i;
-            case Direcao.LESTE -> novaColuna = coluna + i;
-            case Direcao.OESTE -> novaColuna = coluna - i;
-    
-        }
-
-        return new int[]{novaLinha, novaColuna};
-    }
-
-    public boolean estaDentroDoTabuleiro(int linha, int coluna) {
-        return linha >= 0 && linha < tamanho && coluna >= 0 && coluna < tamanho;
-    }
-
-    public boolean podePosicionar(int linha, int coluna) {
-        for (int i = linha - 1; i <= linha + 1; i++) {
-            for (int j = coluna - 1; j <= coluna + 1; j++) {
-                if (estaDentroDoTabuleiro(i, j)) {
-                    if (tabuleiro[i][j].temNavio()) {
-                        return false;
-                    }
-                }
-
-            }
-        }
-        return true;
+    public void registrarAtaque(int linha, int coluna, StatusCelula resultado) {
+        tabuleiro[linha][coluna].registrarResultado(resultado);
     }
 
     public boolean naviosAfundados() {
@@ -122,11 +82,73 @@ public class Tabuleiro {
         return true;
     }
 
+    // Metodos auxiliares
+    private void validarDirecao(Direcao direcao) {
+        if (direcao == null) {
+            throw new PosicionamentoInvalidoException("Direção inválida");
+        }
+    }
+
+    private int[] calcularPosicao(int linha, int coluna, Direcao direcao, int i) {
+        int novaLinha = linha;
+        int novaColuna = coluna;
+
+        switch (direcao) {
+            case Direcao.NORTE ->
+                novaLinha = linha - i;
+            case Direcao.SUL ->
+                novaLinha = linha + i;
+            case Direcao.LESTE ->
+                novaColuna = coluna + i;
+            case Direcao.OESTE ->
+                novaColuna = coluna - i;
+
+        }
+
+        return new int[]{novaLinha, novaColuna};
+    }
+
+    public boolean podePosicionar(int linha, int coluna) {
+        for (int i = linha - 1; i <= linha + 1; i++) {
+            for (int j = coluna - 1; j <= coluna + 1; j++) {
+                if (estaDentroDoTabuleiro(i, j)) {
+                    if (tabuleiro[i][j].temNavio()) {
+                        return false;
+                    }
+                }
+
+            }
+        }
+        return true;
+    }
+
+    public boolean estaDentroDoTabuleiro(int linha, int coluna) {
+        return linha >= 0 && linha < tamanho && coluna >= 0 && coluna < tamanho;
+    }
+
+    // Getters e Setters
+    private void setTabuleiro() {
+        this.tabuleiro = new Celula[tamanho][tamanho];
+        setCelulas();
+    }
+
+    private Celula[][] getTabuleiro() {
+        return this.tabuleiro;
+    }
+
+    private void setCelulas() {
+        for (int linha = 0; linha < tamanho; linha++) {
+            for (int coluna = 0; coluna < tamanho; coluna++) {
+                tabuleiro[linha][coluna] = new Celula();
+            }
+        }
+    }
+
     public int getTamanho() {
         return tamanho;
     }
-    
-    public Celula getCelula(int linha, int coluna){
+
+    public Celula getCelula(int linha, int coluna) {
         return tabuleiro[linha][coluna];
     }
 }

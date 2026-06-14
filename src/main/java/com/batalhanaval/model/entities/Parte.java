@@ -2,11 +2,10 @@ package com.batalhanaval.model.entities;
 
 public class Parte {
     private Navio navio;
-    private boolean atingida;
+    private boolean atingida = false;
 
     public Parte(Navio navio){
-        this.navio = navio;
-        this.atingida = false;
+        setNavio(navio);
     }
     
     public void atingir(){
@@ -15,6 +14,10 @@ public class Parte {
     
     public boolean foiAtingida(){
         return atingida;
+    }
+
+    private void setNavio(Navio navio){
+        this.navio = navio;
     }
     
     public Navio getNavio(){
