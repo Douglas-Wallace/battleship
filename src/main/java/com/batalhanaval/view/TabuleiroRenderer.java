@@ -32,7 +32,28 @@ public class TabuleiroRenderer {
         return tabuleiroProprio;
     }
 
-    
+    public static char[][] visaoInimigo(Tabuleiro tabuleiro) {
+        int tamanho = tabuleiro.getTamanho();
+        char[][] tabuleiroInimigo = new char[tamanho][tamanho];
+
+        for (int i = 0; i < tamanho; i++) {
+            for (int j = 0; j < tamanho; j++) {
+
+                Celula celula = tabuleiro.getCelula(i, j);
+
+                if (!celula.foiAtacada()) {
+                    tabuleiroInimigo[i][j] = '~';
+                } else if (!celula.temNavio()) {
+                    tabuleiroInimigo[i][j] = 'O';
+                } else if (celula.navioAfundado()) {
+                    tabuleiroInimigo[i][j] = '-';
+                } else {
+                    tabuleiroInimigo[i][j] = 'X';
+                }
+            }
+        }
+        return tabuleiroInimigo;
+    }
 
     public static char[][] visaoRastreamento(Tabuleiro tabuleiro) {
         int tamanho = tabuleiro.getTamanho();

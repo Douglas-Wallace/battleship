@@ -3,6 +3,8 @@ package com.batalhanaval.model.entities;
 import com.batalhanaval.model.enums.Direcao;
 import com.batalhanaval.model.enums.StatusCelula;
 import com.batalhanaval.model.exceptions.PosicionamentoInvalidoException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Tabuleiro {
 
@@ -13,27 +15,21 @@ public class Tabuleiro {
         setTabuleiro();
     }
 
-    // Métodos de negocio
+    // ── Métodos de negócio ────────────────────────────────────────────────────
+
     public void adicionarNavio(Navio navio, int linha, int coluna, Direcao direcao) {
         validarDirecao(direcao);
 
         for (int i = 0; i < navio.getTipo().getTamanho(); i++) {
-
             int[] pos = calcularPosicao(linha, coluna, direcao, i);
-            int parteLinha = pos[0];
-            int parteColuna = pos[1];
-
-            if (!estaDentroDoTabuleiro(parteLinha, parteColuna) || !podePosicionar(parteLinha, parteColuna)) {
+            if (!estaDentroDoTabuleiro(pos[0], pos[1]) || !podePosicionar(pos[0], pos[1])) {
                 throw new PosicionamentoInvalidoException("Posição invalida");
             }
         }
 
         for (int i = 0; i < navio.getTipo().getTamanho(); i++) {
             int[] pos = calcularPosicao(linha, coluna, direcao, i);
-            int parteLinha = pos[0];
-            int parteColuna = pos[1];
-
-            tabuleiro[parteLinha][parteColuna].setParte(navio.getPartes().get(i));
+            tabuleiro[pos[0]][pos[1]].setParte(navio.getPartes().get(i));
         }
     }
 
@@ -48,19 +44,12 @@ public class Tabuleiro {
             return StatusCelula.JA_ATACADO;
         }
 
+        celula.atacar();
+
         if (celula.temNavio()) {
-            celula.atacar();
-            if (celula.navioAfundado()) {
-                return StatusCelula.AFUNDOU;
-            } else {
-                return StatusCelula.ACERTOU;
-            }
-
-        } else {
-            celula.atacar();
-            return StatusCelula.AGUA;
+            return celula.navioAfundado() ? StatusCelula.AFUNDOU : StatusCelula.ACERTOU;
         }
-
+        return StatusCelula.AGUA;
     }
 
     public void registrarAtaque(int linha, int coluna, StatusCelula resultado) {
@@ -70,19 +59,42 @@ public class Tabuleiro {
     public boolean naviosAfundados() {
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
-
                 Celula celula = tabuleiro[i][j];
-
                 if (celula.temNavio() && !celula.navioAfundado()) {
                     return false;
                 }
             }
         }
-
         return true;
     }
 
-    // Metodos auxiliares
+    /**
+     * Calcula as posições que um navio ocuparia a partir de (linha, coluna)
+     * na direção e tamanho informados. Não valida — só calcula.
+     */
+    public List<int[]> calcularPosicoes(int linha, int coluna, Direcao direcao, int tamanhoNavio) {
+        List<int[]> posicoes = new ArrayList<>();
+        for (int i = 0; i < tamanhoNavio; i++) {
+            posicoes.add(calcularPosicao(linha, coluna, direcao, i));
+        }
+        return posicoes;
+    }
+
+    /**
+     * Verifica se um navio pode ser posicionado a partir de (linha, coluna)
+     * na direção e tamanho informados.
+     */
+    public boolean posicionamentoValido(int linha, int coluna, Direcao direcao, int tamanhoNavio) {
+        List<int[]> posicoes = calcularPosicoes(linha, coluna, direcao, tamanhoNavio);
+        for (int[] pos : posicoes) {
+            if (!estaDentroDoTabuleiro(pos[0], pos[1])) return false;
+            if (!podePosicionar(pos[0], pos[1]))        return false;
+        }
+        return true;
+    }
+
+    // ── Métodos auxiliares ────────────────────────────────────────────────────
+
     private void validarDirecao(Direcao direcao) {
         if (direcao == null) {
             throw new PosicionamentoInvalidoException("Direção inválida");
@@ -90,33 +102,20 @@ public class Tabuleiro {
     }
 
     private int[] calcularPosicao(int linha, int coluna, Direcao direcao, int i) {
-        int novaLinha = linha;
-        int novaColuna = coluna;
-
-        switch (direcao) {
-            case Direcao.NORTE ->
-                novaLinha = linha - i;
-            case Direcao.SUL ->
-                novaLinha = linha + i;
-            case Direcao.LESTE ->
-                novaColuna = coluna + i;
-            case Direcao.OESTE ->
-                novaColuna = coluna - i;
-
-        }
-
-        return new int[]{novaLinha, novaColuna};
+        return switch (direcao) {
+            case NORTE -> new int[]{linha - i, coluna};
+            case SUL   -> new int[]{linha + i, coluna};
+            case LESTE -> new int[]{linha, coluna + i};
+            case OESTE -> new int[]{linha, coluna - i};
+        };
     }
 
     public boolean podePosicionar(int linha, int coluna) {
         for (int i = linha - 1; i <= linha + 1; i++) {
             for (int j = coluna - 1; j <= coluna + 1; j++) {
-                if (estaDentroDoTabuleiro(i, j)) {
-                    if (tabuleiro[i][j].temNavio()) {
-                        return false;
-                    }
+                if (estaDentroDoTabuleiro(i, j) && tabuleiro[i][j].temNavio()) {
+                    return false;
                 }
-
             }
         }
         return true;
@@ -126,17 +125,10 @@ public class Tabuleiro {
         return linha >= 0 && linha < tamanho && coluna >= 0 && coluna < tamanho;
     }
 
-    // Getters e Setters
+    // ── Getters e Setters ─────────────────────────────────────────────────────
+
     private void setTabuleiro() {
         this.tabuleiro = new Celula[tamanho][tamanho];
-        setCelulas();
-    }
-
-    private Celula[][] getTabuleiro() {
-        return this.tabuleiro;
-    }
-
-    private void setCelulas() {
         for (int linha = 0; linha < tamanho; linha++) {
             for (int coluna = 0; coluna < tamanho; coluna++) {
                 tabuleiro[linha][coluna] = new Celula();
