@@ -3,50 +3,54 @@ package com.batalhanaval.model.entities;
 import com.batalhanaval.model.enums.StatusCelula;
 
 public class Celula {
-    private Parte parte; //null = aguá
+
+    private Parte parte; // null = água
     private boolean atacada;
     private StatusCelula statusAtaque;
-    
-    public Celula(){
+
+    public Celula() {
     }
-    
-    public void registrarResultado(StatusCelula resultado) {
-        this.statusAtaque = resultado;
-    }
-    
-    public StatusCelula getStatusAtaque() {
-        return statusAtaque;
-    }
-    
-    public boolean temNavio(){
-        return parte != null;              
-    }
-    
-    public boolean foiAtacada(){
-        return atacada;
-    }
-    
-    public void atacar(){
+
+    // ── Métodos de negócio ────────────────────────────────────────────────────
+
+    /** Ataca a célula real (tabuleiro próprio). Marca como atacada e atinge a parte se houver navio. */
+    public void atacar() {
         this.atacada = true;
-        
-        if(parte != null){
+        if (parte != null) {
             parte.atingir();
         }
     }
-    
-    public void setParte(Parte parte){
-        this.parte = parte;
+
+    /** Registra o resultado de um ataque no tabuleiro de rastreamento. */
+    public void registrarResultado(StatusCelula resultado) {
+        this.atacada = true;
+        this.statusAtaque = resultado;
     }
-    
-    public Parte getParte(){
-        return this.parte;
+
+    public boolean temNavio() {
+        return parte != null;
     }
-    
-    public boolean navioAfundado(){
-        if(parte == null){
-            return false;
-        }
+
+    public boolean foiAtacada() {
+        return atacada;
+    }
+
+    public boolean navioAfundado() {
+        if (parte == null) return false;
         return parte.getNavio().foiAfundado();
     }
 
+    // ── Getters e Setters ─────────────────────────────────────────────────────
+
+    public void setParte(Parte parte) {
+        this.parte = parte;
+    }
+
+    public Parte getParte() {
+        return this.parte;
+    }
+
+    public StatusCelula getStatusAtaque() {
+        return statusAtaque;
+    }
 }
