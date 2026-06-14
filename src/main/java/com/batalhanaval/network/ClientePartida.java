@@ -21,7 +21,9 @@ public class ClientePartida implements ConexaoPartida {
         socket = new Socket(enderecoServidor, PORTA);
         System.out.println("Conectado ao servidor: " + enderecoServidor);
 
+        // IMPORTANTE: saida antes de entrada para evitar deadlock
         saida  = new ObjectOutputStream(socket.getOutputStream());
+        saida.flush();
         entrada = new ObjectInputStream(socket.getInputStream());
     }
 
