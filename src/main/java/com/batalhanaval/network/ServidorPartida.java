@@ -16,10 +16,12 @@ public class ServidorPartida implements ConexaoPartida {
     public void conectar() throws IOException {
         serverSocket = new ServerSocket(PORTA);
         System.out.println("Aguardando conexão na porta " + PORTA + "...");
-        socket = serverSocket.accept(); // bloqueia até o cliente conectar
+        socket = serverSocket.accept();
         System.out.println("Cliente conectado: " + socket.getInetAddress());
 
+        // IMPORTANTE: saida antes de entrada para evitar deadlock
         saida  = new ObjectOutputStream(socket.getOutputStream());
+        saida.flush();
         entrada = new ObjectInputStream(socket.getInputStream());
     }
 
@@ -41,7 +43,7 @@ public class ServidorPartida implements ConexaoPartida {
     @Override
     public void encerrar() {
         try {
-            if (socket     != null) socket.close();
+            if (socket       != null) socket.close();
             if (serverSocket != null) serverSocket.close();
         } catch (IOException e) {
             System.out.println("Erro ao encerrar servidor: " + e.getMessage());
