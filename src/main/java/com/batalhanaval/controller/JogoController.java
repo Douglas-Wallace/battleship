@@ -2,18 +2,22 @@ package com.batalhanaval.controller;
 
 import com.batalhanaval.model.entities.Jogador;
 import com.batalhanaval.model.entities.Jogo;
+import com.batalhanaval.model.entities.Tabuleiro;
 import com.batalhanaval.model.enums.Direcao;
 import com.batalhanaval.model.enums.StatusCelula;
 import com.batalhanaval.model.enums.TipoNavio;
 import com.batalhanaval.model.exceptions.PosicionamentoInvalidoException;
 import com.batalhanaval.model.util.CoordenadaParser;
-import com.batalhanaval.network.ConexaoPartida;
 import com.batalhanaval.view.ConsoleView;
+import com.batalhanaval.view.PosicionamentoView;
+import com.batalhanaval.view.TabuleiroRenderer;
 import java.util.Scanner;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 public class JogoController {
-    
-    private ConexaoPartida conexao;
+
+    //private ConexaoPartida conexao;
     private final Jogo jogo;
     private final ConsoleView view;
     private final Scanner sc;
@@ -25,10 +29,45 @@ public class JogoController {
     }
 
     public void iniciar() {
-        fasePosicionamento();
-        faseBatalha();
+        // Escolhe o modo antes de tudo
+        int opcao = JOptionPane.showOptionDialog(
+                null,
+                "Como deseja jogar?",
+                "Batalha Naval",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                new String[]{"Console", "Interface Gráfica"},
+                "Interface Gráfica"
+        );
+
+        if (opcao == 1) {
+            iniciarSwing();
+        } else {
+            fasePosicionamento();
+            faseBatalha();
+        }
     }
-    
+
+    private void iniciarSwing() {
+        SwingUtilities.invokeLater(() -> {
+            Jogador jogador1 = jogo.getJogadorAtual();   // Douglas
+            Jogador jogador2 = jogo.getJogadorInimigo(); // Isabella
+
+            // Posiciona jogador 1, depois jogador 2, depois inicia batalha
+            new PosicionamentoView(jogador1, ()
+                    -> new PosicionamentoView(jogador2, ()
+                            -> iniciarBatalhaSwing()
+                    ).setVisible(true)
+            ).setVisible(true);
+        });
+    }
+
+    private void iniciarBatalhaSwing() {
+        // por enquanto vazio — próxima tela a implementar
+        JOptionPane.showMessageDialog(null, "Fase de batalha em breve!");
+    }
+
     private void fasePosicionamento() {
         posicionarNavios(jogo.getJogadorAtual());
         jogo.trocarTurno();
@@ -37,14 +76,18 @@ public class JogoController {
     }
 
     private void posicionarNavios(Jogador jogador) {
+        Tabuleiro tab = jogador.getTabuleiro();
+
         for (TipoNavio tipo : TipoNavio.values()) {
             for (int i = 0; i < tipo.getLimite(); i++) {
                 boolean posicionado = false;
 
                 while (!posicionado) {
                     try {
+
+                        view.mostrarMensagem("vez de - " + jogador.getNome());
                         view.mostrarMensagem("\nPosicione um " + tipo.getNome());
-                        view.exibirTabuleiro(jogador);
+                        view.exibirTabuleiro(TabuleiroRenderer.visaoPropria(tab), tab.getTamanho());
 
                         int[] coord = lerCoordenada(jogador);
                         Direcao direcao = lerDirecao();
@@ -55,13 +98,13 @@ public class JogoController {
                     } catch (PosicionamentoInvalidoException e) {
                         view.mostrarMensagem("Posição inválida. Tente novamente.");
                     } catch (Exception e) {
-                        view.mostrarMensagem("Entrada inválida. Tente novamente.");
+                        view.mostrarMensagem("Erro: " + e.getMessage()); // ← ver o erro real
                     }
                 }
             }
         }
     }
-    
+
     private int[] lerCoordenada(Jogador jogador) {
         view.mostrarMensagem("Digite a coordenada (ex: B5): ");
         String entrada = sc.next().toUpperCase();
@@ -101,9 +144,8 @@ public class JogoController {
         } while (resultado == null || resultado == StatusCelula.JA_ATACADO);
     }
 
-
     private Direcao lerDirecao() {
-        view.mostrarMensagem("Digite a direção (N/S/L/O): ");
+        view.mostrarMensagem("Digite a direcao (N/S/L/O): ");
         String entrada = sc.next().toUpperCase();
 
         return switch (entrada) {
@@ -119,8 +161,6 @@ public class JogoController {
                 throw new IllegalArgumentException("Direção inválida");
         };
     }
-
-    
 
     private void faseBatalha() {
         while (!jogo.terminou()) {
@@ -139,15 +179,17 @@ public class JogoController {
     }
 
     private void executarTurno(Jogador atual, Jogador inimigo) {
+        Tabuleiro tabAtual = atual.getTabuleiro();
+        Tabuleiro tabDescoberto = atual.getTabuleiroRastreamento();
 
         view.mostrarMensagem("\n----------------");
         view.mostrarMensagem("Vez de: " + atual.getNome());
 
         view.mostrarMensagem("\nSeu tabuleiro:");
-        view.exibirTabuleiro(atual);
+        view.exibirTabuleiro(TabuleiroRenderer.visaoPropria(tabAtual), tabAtual.getTamanho());
 
         view.mostrarMensagem("\nTabuleiro inimigo:");
-        view.exibirTabuleiroComMascara(inimigo);
+        view.exibirTabuleiro(TabuleiroRenderer.visaoPropria(tabDescoberto), tabDescoberto.getTamanho());
 
         realizarAtaque(atual, inimigo);
     }

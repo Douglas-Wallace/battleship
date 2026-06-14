@@ -1,10 +1,21 @@
 package com.batalhanaval.model.entities;
 
+import com.batalhanaval.model.enums.StatusCelula;
+
 public class Celula {
     private Parte parte; //null = aguá
     private boolean atacada;
+    private StatusCelula statusAtaque;
     
     public Celula(){
+    }
+    
+    public void registrarResultado(StatusCelula resultado) {
+        this.statusAtaque = resultado;
+    }
+    
+    public StatusCelula getStatusAtaque() {
+        return statusAtaque;
     }
     
     public boolean temNavio(){
@@ -17,6 +28,7 @@ public class Celula {
     
     public void atacar(){
         this.atacada = true;
+        
         if(parte != null){
             parte.atingir();
         }

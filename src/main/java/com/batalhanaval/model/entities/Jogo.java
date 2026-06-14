@@ -1,6 +1,5 @@
 package com.batalhanaval.model.entities;
 
-import com.batalhanaval.model.entities.Jogador;
 
 public class Jogo {
     private Jogador jogadorAtual;
