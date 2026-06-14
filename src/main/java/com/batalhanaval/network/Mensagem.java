@@ -1,4 +1,4 @@
-
+package com.batalhanaval.network;
 import com.batalhanaval.model.enums.StatusCelula;
 import com.batalhanaval.network.TipoMensagem;
 import java.io.Serializable;
