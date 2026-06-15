@@ -30,6 +30,11 @@ public class Jogador {
     public void posicionarNavio(TipoNavio tipo, int linha, int coluna, Direcao direcao) {
         tabuleiro.adicionarNavio(new Navio(tipo), linha, coluna, direcao);
     }
+    
+    public void reiniciar() {
+        setTabuleiro();
+        setTabuleiroRastreamento();
+    }
 
     // Getters e Setters
     public String getNome() {

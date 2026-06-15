@@ -34,8 +34,8 @@ public class JogoController {
     private BatalhaView batalhaView;
 
     // Sincronização do posicionamento
-    private boolean euTermineiPosicionamento  = false;
-    private boolean inimigoProntoParaBatalha  = false;
+    private boolean euTermineiPosicionamento = false;
+    private boolean inimigoProntoParaBatalha = false;
 
     private final Scanner sc = new Scanner(System.in);
 
@@ -119,10 +119,10 @@ public class JogoController {
 
     private void iniciarPosicionamento() {
         if (usarSwing) {
-            SwingUtilities.invokeLater(() -> {
-                Jogador jogador = jogo.getJogadorAtual();
-                new PosicionamentoView(jogador, () -> aoTerminarPosicionamento()).setVisible(true);
-            });
+            SwingUtilities.invokeLater(() ->
+                new PosicionamentoView(jogo.getJogador(), () -> aoTerminarPosicionamento())
+                    .setVisible(true)
+            );
         } else {
             posicionarNaviosConsole();
             aoTerminarPosicionamento();
@@ -130,7 +130,7 @@ public class JogoController {
     }
 
     private void posicionarNaviosConsole() {
-        Jogador jogador = jogo.getJogadorAtual();
+        Jogador jogador = jogo.getJogador();
         Tabuleiro tab   = jogador.getTabuleiro();
 
         for (TipoNavio tipo : TipoNavio.values()) {
@@ -173,7 +173,6 @@ public class JogoController {
             return;
         }
 
-        // Thread que aguarda o INICIO do inimigo
         new Thread(() -> {
             try {
                 Mensagem msg = conexao.receber();
@@ -189,7 +188,7 @@ public class JogoController {
 
     /**
      * Chamado quando os dois jogadores terminaram o posicionamento.
-     * O servidor decide quem começa e inicia a batalha.
+     * O servidor começa atacando.
      */
     private void ambosProtos() {
         if (usarSwing) {
@@ -202,10 +201,9 @@ public class JogoController {
     // ── Batalha Swing ─────────────────────────────────────────────────────────
 
     private void abrirBatalhaSwing() {
-        Jogador jogador = jogo.getJogadorAtual();
+        Jogador jogador = jogo.getJogador();
 
         batalhaView = new BatalhaView(jogador, (linha, coluna) -> {
-            // Callback: jogador clicou para atacar
             try {
                 conexao.enviar(new Mensagem(TipoMensagem.ATAQUE, linha, coluna));
             } catch (IOException e) {
@@ -213,7 +211,6 @@ public class JogoController {
             }
         });
 
-        // Servidor começa, cliente aguarda
         if (ehServidor) {
             batalhaView.habilitarAtaque(true);
             batalhaView.adicionarLog("Sua vez! Você começa.");
@@ -224,7 +221,6 @@ public class JogoController {
 
         batalhaView.setVisible(true);
 
-        // Thread que fica ouvindo mensagens da rede
         new Thread(() -> ouvirRedeSwing()).start();
     }
 
@@ -237,21 +233,19 @@ public class JogoController {
 
                     case ATAQUE -> {
                         // Inimigo atacou meu tabuleiro
-                        StatusCelula resultado = jogo.getJogadorAtual()
+                        StatusCelula resultado = jogo.getJogador()
                             .getTabuleiro().atacar(msg.getLinha(), msg.getColuna());
 
-                        // Responde com o resultado
-                        conexao.enviar(new Mensagem(TipoMensagem.RESULTADO, resultado));
+                        conexao.enviar(new Mensagem(TipoMensagem.RESULTADO, resultado,
+                            msg.getLinha(), msg.getColuna()));
 
-                        // Atualiza meu tabuleiro na tela
                         SwingUtilities.invokeLater(() -> {
                             batalhaView.atualizarTabuleiro();
 
-                            if (jogo.getJogadorAtual().naviosAfundados()) {
+                            if (jogo.getJogador().naviosAfundados()) {
                                 batalhaView.mostrarFimDeJogo("Você perdeu!");
                                 conexao.encerrar();
                             } else {
-                                // Minha vez de atacar
                                 batalhaView.habilitarAtaque(true);
                                 batalhaView.adicionarLog("Sua vez!");
                             }
@@ -261,23 +255,14 @@ public class JogoController {
                     case RESULTADO -> {
                         // Recebi o resultado do meu ataque
                         StatusCelula resultado = msg.getResultado();
+                        int linha  = msg.getLinha();
+                        int coluna = msg.getColuna();
 
-                        // Pega a última coordenada enviada — guardada temporariamente
-                        int linha   = msg.getLinha()   != null ? msg.getLinha()   : 0;
-                        int coluna  = msg.getColuna()  != null ? msg.getColuna()  : 0;
-
-                        jogo.getJogadorAtual().getTabuleiroRastreamento()
+                        jogo.getJogador().getTabuleiroRastreamento()
                             .registrarAtaque(linha, coluna, resultado);
 
                         SwingUtilities.invokeLater(() -> {
                             batalhaView.registrarResultadoAtaque(linha, coluna, resultado);
-
-                            if (resultado == StatusCelula.AFUNDOU
-                                    && jogo.getJogadorInimigo().naviosAfundados()) {
-                                batalhaView.mostrarFimDeJogo("Você venceu!");
-                                conexao.encerrar();
-                            }
-                            // Turno passa para o inimigo — aguarda ATAQUE dele
                             batalhaView.habilitarAtaque(false);
                             batalhaView.adicionarLog("Aguardando adversário...");
                         });
@@ -301,12 +286,10 @@ public class JogoController {
     private void iniciarBatalhaConsole() {
         consoleView.mostrarMensagem("\n=== BATALHA INICIADA ===");
 
-        boolean meuTurno = ehServidor; // servidor começa
-
-        // Thread que ouve a rede no console
         new Thread(() -> ouvirRedeConsole()).start();
 
-        if (meuTurno) {
+        if (ehServidor) {
+            consoleView.mostrarMensagem("Você começa!");
             realizarAtaqueConsole();
         } else {
             consoleView.mostrarMensagem("Aguardando adversário atacar...");
@@ -321,15 +304,16 @@ public class JogoController {
                 switch (msg.getTipo()) {
 
                     case ATAQUE -> {
-                        StatusCelula resultado = jogo.getJogadorAtual()
+                        StatusCelula resultado = jogo.getJogador()
                             .getTabuleiro().atacar(msg.getLinha(), msg.getColuna());
 
-                        conexao.enviar(new Mensagem(TipoMensagem.RESULTADO, resultado));
+                        conexao.enviar(new Mensagem(TipoMensagem.RESULTADO, resultado,
+                            msg.getLinha(), msg.getColuna()));
 
                         consoleView.mostrarResultadoAtaque(resultado);
                         exibirTabuleirosProprios();
 
-                        if (jogo.getJogadorAtual().naviosAfundados()) {
+                        if (jogo.getJogador().naviosAfundados()) {
                             consoleView.mostrarMensagem("Você perdeu!");
                             conexao.encerrar();
                             return;
@@ -341,14 +325,13 @@ public class JogoController {
 
                     case RESULTADO -> {
                         StatusCelula resultado = msg.getResultado();
-                        consoleView.mostrarResultadoAtaque(resultado);
+                        int linha  = msg.getLinha();
+                        int coluna = msg.getColuna();
 
-                        if (resultado == StatusCelula.AFUNDOU
-                                && jogo.getJogadorInimigo().naviosAfundados()) {
-                            consoleView.mostrarMensagem("Você venceu!");
-                            conexao.encerrar();
-                            return;
-                        }
+                        jogo.getJogador().getTabuleiroRastreamento()
+                            .registrarAtaque(linha, coluna, resultado);
+
+                        consoleView.mostrarResultadoAtaque(resultado);
 
                         consoleView.mostrarMensagem("Aguardando adversário atacar...");
                     }
@@ -370,7 +353,7 @@ public class JogoController {
         while (!atacou) {
             try {
                 exibirTabuleirosProprios();
-                int[] coord = lerCoordenada(jogo.getJogadorAtual());
+                int[] coord = lerCoordenada(jogo.getJogador());
                 conexao.enviar(new Mensagem(TipoMensagem.ATAQUE, coord[0], coord[1]));
                 atacou = true;
             } catch (IOException e) {
@@ -382,8 +365,8 @@ public class JogoController {
     }
 
     private void exibirTabuleirosProprios() {
-        Tabuleiro tab = jogo.getJogadorAtual().getTabuleiro();
-        Tabuleiro ras = jogo.getJogadorAtual().getTabuleiroRastreamento();
+        Tabuleiro tab = jogo.getJogador().getTabuleiro();
+        Tabuleiro ras = jogo.getJogador().getTabuleiroRastreamento();
 
         consoleView.mostrarMensagem("\nSeu tabuleiro:");
         consoleView.exibirTabuleiro(TabuleiroRenderer.visaoPropria(tab), tab.getTamanho());
@@ -400,8 +383,8 @@ public class JogoController {
 
         if (entrada.length() < 2) throw new IllegalArgumentException("Coordenada inválida");
 
-        int[] coord   = CoordenadaParser.parse(entrada);
-        int tamanho   = jogador.getTabuleiro().getTamanho();
+        int[] coord = CoordenadaParser.parse(entrada);
+        int tamanho = jogador.getTabuleiro().getTamanho();
 
         if (coord[0] < 0 || coord[0] >= tamanho || coord[1] < 0 || coord[1] >= tamanho) {
             throw new IllegalArgumentException("Fora do tabuleiro");
@@ -432,7 +415,11 @@ public class JogoController {
                 JOptionPane.showMessageDialog(null, msg);
             }
         } else {
-            consoleView.mostrarMensagem(msg);
+            if (consoleView != null) {
+                consoleView.mostrarMensagem(msg);
+            } else {
+                System.out.println(msg);
+            }
         }
     }
 }
