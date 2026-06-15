@@ -54,4 +54,31 @@ public class TabuleiroRenderer {
         }
         return tabuleiroInimigo;
     }
+
+    public static char[][] visaoRastreamento(Tabuleiro tabuleiro) {
+        int tamanho = tabuleiro.getTamanho();
+        char[][] grid = new char[tamanho][tamanho];
+
+        for (int i = 0; i < tamanho; i++) {
+            for (int j = 0; j < tamanho; j++) {
+                Celula celula = tabuleiro.getCelula(i, j);
+
+                if (!celula.foiAtacada()) {
+                    grid[i][j] = '~';
+                } else {
+                    grid[i][j] = switch (celula.getStatusAtaque()) {
+                        case AGUA ->
+                            'O';
+                        case ACERTOU ->
+                            'X';
+                        case AFUNDOU ->
+                            '-';
+                        default ->
+                            '?';
+                    };
+                }
+            }
+        }
+        return grid;
+    }
 }
