@@ -46,6 +46,12 @@ public class JogoController {
     // ── Início ────────────────────────────────────────────────────────────────
 
     public void iniciar() {
+        // Reseta o jogador para nova partida
+        jogo.getJogador().reiniciar();
+        euTermineiPosicionamento = false;
+        inimigoProntoParaBatalha = false;
+        batalhaView = null;
+
         escolherModoConexao();
         escolherInterface();
         conectar();
@@ -158,10 +164,6 @@ public class JogoController {
         }
     }
 
-    /**
-     * Chamado quando este jogador termina o posicionamento.
-     * Envia INICIO para o inimigo e aguarda o INICIO dele em uma Thread.
-     */
     private void aoTerminarPosicionamento() {
         euTermineiPosicionamento = true;
         mostrarMensagem("Navios posicionados! Aguardando adversário...");
@@ -186,16 +188,35 @@ public class JogoController {
         }).start();
     }
 
-    /**
-     * Chamado quando os dois jogadores terminaram o posicionamento.
-     * O servidor começa atacando.
-     */
     private void ambosProtos() {
         if (usarSwing) {
             SwingUtilities.invokeLater(() -> abrirBatalhaSwing());
         } else {
             iniciarBatalhaConsole();
         }
+    }
+
+    // ── Fim de jogo ───────────────────────────────────────────────────────────
+
+    private void encerrarPartida(boolean venceu) {
+        String mensagem = venceu ? "Você venceu!" : "Você perdeu!";
+
+        if (usarSwing) {
+            SwingUtilities.invokeLater(() -> {
+                if (batalhaView != null) batalhaView.dispose();
+                JOptionPane.showMessageDialog(null, mensagem, "Fim de jogo",
+                    JOptionPane.INFORMATION_MESSAGE);
+                reiniciar();
+            });
+        } else {
+            consoleView.mostrarMensagem("\n" + mensagem);
+            reiniciar();
+        }
+    }
+
+    private void reiniciar() {
+        conexao.encerrar();
+        iniciar(); // volta pro menu inicial
     }
 
     // ── Batalha Swing ─────────────────────────────────────────────────────────
@@ -232,28 +253,27 @@ public class JogoController {
                 switch (msg.getTipo()) {
 
                     case ATAQUE -> {
-                        // Inimigo atacou meu tabuleiro
                         StatusCelula resultado = jogo.getJogador()
                             .getTabuleiro().atacar(msg.getLinha(), msg.getColuna());
 
                         conexao.enviar(new Mensagem(TipoMensagem.RESULTADO, resultado,
                             msg.getLinha(), msg.getColuna()));
 
-                        SwingUtilities.invokeLater(() -> {
-                            batalhaView.atualizarTabuleiro();
+                        SwingUtilities.invokeLater(() -> batalhaView.atualizarTabuleiro());
 
-                            if (jogo.getJogador().naviosAfundados()) {
-                                batalhaView.mostrarFimDeJogo("Você perdeu!");
-                                conexao.encerrar();
-                            } else {
-                                batalhaView.habilitarAtaque(true);
-                                batalhaView.adicionarLog("Sua vez!");
-                            }
+                        if (jogo.getJogador().naviosAfundados()) {
+                            conexao.enviar(new Mensagem(TipoMensagem.DERROTA));
+                            encerrarPartida(false);
+                            return;
+                        }
+
+                        SwingUtilities.invokeLater(() -> {
+                            batalhaView.habilitarAtaque(true);
+                            batalhaView.adicionarLog("Sua vez!");
                         });
                     }
 
                     case RESULTADO -> {
-                        // Recebi o resultado do meu ataque
                         StatusCelula resultado = msg.getResultado();
                         int linha  = msg.getLinha();
                         int coluna = msg.getColuna();
@@ -266,6 +286,12 @@ public class JogoController {
                             batalhaView.habilitarAtaque(false);
                             batalhaView.adicionarLog("Aguardando adversário...");
                         });
+                    }
+
+                    case DERROTA -> {
+                        // inimigo avisou que perdeu — eu venci
+                        encerrarPartida(true);
+                        return;
                     }
 
                     case DESCONECTADO -> {
@@ -314,8 +340,8 @@ public class JogoController {
                         exibirTabuleirosProprios();
 
                         if (jogo.getJogador().naviosAfundados()) {
-                            consoleView.mostrarMensagem("Você perdeu!");
-                            conexao.encerrar();
+                            conexao.enviar(new Mensagem(TipoMensagem.DERROTA));
+                            encerrarPartida(false);
                             return;
                         }
 
@@ -332,8 +358,12 @@ public class JogoController {
                             .registrarAtaque(linha, coluna, resultado);
 
                         consoleView.mostrarResultadoAtaque(resultado);
-
                         consoleView.mostrarMensagem("Aguardando adversário atacar...");
+                    }
+
+                    case DERROTA -> {
+                        encerrarPartida(true);
+                        return;
                     }
 
                     case DESCONECTADO -> {
