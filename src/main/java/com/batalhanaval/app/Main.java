@@ -3,17 +3,22 @@ package com.batalhanaval.app;
 import com.batalhanaval.controller.JogoController;
 import com.batalhanaval.model.entities.Jogador;
 import com.batalhanaval.model.entities.Jogo;
+import javax.swing.JOptionPane;
 
 public class Main {
 
     public static void main(String[] args) {
-        Jogador jogador1 = new Jogador("Douglas");
-        Jogador jogador2 = new Jogador("Isabella");
+		String nome = JOptionPane.showInputDialog(null, "Digite seu nome:", "Batalha Naval",
+				JOptionPane.QUESTION_MESSAGE);
 
-        Jogo jogo = new Jogo(jogador1, jogador2);
-        JogoController controller = new JogoController(jogo);
+		if (nome == null || nome.isBlank())
+			nome = "Jogador";
 
-        controller.iniciar();
-    }
+		Jogador jogador = new Jogador(nome.trim());
+		Jogo jogo = new Jogo(jogador);
+
+		JogoController controller = new JogoController(jogo);
+		controller.iniciar();
+	}
 }
 
