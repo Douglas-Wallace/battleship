@@ -18,8 +18,8 @@ public class Jogador {
 
     // ---- Métodos de negócio ----
 
-    public boolean naviosAfundados() {
-        return tabuleiro.naviosAfundados();
+    private void setTabuleiro() {
+        this.tabuleiro = new Tabuleiro();
     }
 
     public StatusCelula atacar(Jogador inimigo, int linha, int coluna) {
@@ -28,8 +28,8 @@ public class Jogador {
         return resultado;
     }
 
-    public void posicionarNavio(TipoNavio tipo, int linha, int coluna, Direcao direcao) {
-        tabuleiro.adicionarNavio(new Navio(tipo), linha, coluna, direcao);
+    private void setTabuleiroRastreamento() {
+        this.tabuleiroRastreamento = new Tabuleiro();
     }
 
 
