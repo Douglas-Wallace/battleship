@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class PosicionamentoView extends JFrame {
 
-    // ── Paleta ────────────────────────────────────────────────────────────────
+    // --- Paleta ---
     private static final Color COR_FUNDO        = new Color(10, 20, 40);
     private static final Color COR_CELULA       = new Color(20, 60, 100);
     private static final Color COR_CELULA_BORDA = new Color(30, 90, 140);
@@ -40,7 +40,7 @@ public class PosicionamentoView extends JFrame {
     private static final int TAMANHO_CELULA = 50;
     private static final int TAMANHO_HEADER = 30;
 
-    // ── Estado ────────────────────────────────────────────────────────────────
+    // --- Estado ---
     private final Jogador jogador;
     private final Runnable aoTerminar;
 
@@ -51,14 +51,14 @@ public class PosicionamentoView extends JFrame {
     private int hoverLinha  = -1;
     private int hoverColuna = -1;
 
-    // ── Componentes ───────────────────────────────────────────────────────────
+    // --- Componentes v
     private TabuleiroPanel painelTabuleiro;
     private JLabel labelNavio;
     private JLabel labelDirecao;
     private JLabel labelInstrucao;
     private JPanel painelFila;
 
-    // ─────────────────────────────────────────────────────────────────────────
+    // ---
 
     public PosicionamentoView(Jogador jogador, Runnable aoTerminar) {
         this.jogador     = jogador;
@@ -73,7 +73,7 @@ public class PosicionamentoView extends JFrame {
         painelTabuleiro.requestFocusInWindow();
     }
 
-    // ── Fila de navios ────────────────────────────────────────────────────────
+    // --- Fila de navios ---
 
     private TipoNavio[] construirFila() {
         List<TipoNavio> fila = new ArrayList<>();
@@ -85,7 +85,7 @@ public class PosicionamentoView extends JFrame {
         return fila.toArray(new TipoNavio[0]);
     }
 
-    // ── Configuração ──────────────────────────────────────────────────────────
+    // --- Configuração ---
 
     private void configurarJanela() {
         setTitle("Batalha Naval — Posicionamento: " + jogador.getNome());
@@ -187,7 +187,7 @@ public class PosicionamentoView extends JFrame {
         return label;
     }
 
-    // ── Atualização do painel lateral ─────────────────────────────────────────
+    // --- Atualização do painel lateral ---
 
     private void atualizarPainel() {
         if (indiceAtual >= filaNavios.length) return;
@@ -218,7 +218,7 @@ public class PosicionamentoView extends JFrame {
         };
     }
 
-    // ── Rotação ───────────────────────────────────────────────────────────────
+    // --- Rotação ---
 
     private void rotacionar() {
         direcaoAtual = switch (direcaoAtual) {
@@ -231,7 +231,7 @@ public class PosicionamentoView extends JFrame {
         painelTabuleiro.repaint();
     }
 
-    // ── Posicionamento ────────────────────────────────────────────────────────
+    // --- Posicionamento ---
 
     private void tentarPosicionar(int linha, int coluna) {
         if (indiceAtual >= filaNavios.length) return;
@@ -266,7 +266,7 @@ public class PosicionamentoView extends JFrame {
         }
     }
 
-    // ── Painel do tabuleiro ────────────────────────────────────────────────────
+    // --- Painel do tabuleiro ---
 
     private class TabuleiroPanel extends JPanel {
 
@@ -360,7 +360,7 @@ public class PosicionamentoView extends JFrame {
                 }
             }
 
-            // Headers — números
+            // Headers --- números
             g2.setFont(new Font("Monospaced", Font.BOLD, 12));
             g2.setColor(COR_DESTAQUE);
             for (int j = 0; j < tamanho; j++) {
@@ -368,7 +368,7 @@ public class PosicionamentoView extends JFrame {
                 drawCentered(g2, String.valueOf(j + 1), x, TAMANHO_HEADER / 2 + 5);
             }
 
-            // Headers — letras
+            // Headers --- letras
             for (int i = 0; i < tamanho; i++) {
                 int y = TAMANHO_HEADER + i * TAMANHO_CELULA + TAMANHO_CELULA / 2;
                 drawCentered(g2, String.valueOf((char) ('A' + i)), TAMANHO_HEADER / 2, y + 5);

@@ -16,9 +16,10 @@ public class Jogador {
         setTabuleiroRastreamento();
     }
 
-    // Métodos de negocio
-    public boolean naviosAfundados() {
-        return tabuleiro.naviosAfundados();
+    // ---- Métodos de negócio ----
+
+    private void setTabuleiro() {
+        this.tabuleiro = new Tabuleiro();
     }
 
     public StatusCelula atacar(Jogador inimigo, int linha, int coluna) {
@@ -27,37 +28,24 @@ public class Jogador {
         return resultado;
     }
 
-    public void posicionarNavio(TipoNavio tipo, int linha, int coluna, Direcao direcao) {
-        tabuleiro.adicionarNavio(new Navio(tipo), linha, coluna, direcao);
+    private void setTabuleiroRastreamento() {
+        this.tabuleiroRastreamento = new Tabuleiro();
     }
-    
+
+
     public void reiniciar() {
         setTabuleiro();
         setTabuleiroRastreamento();
     }
 
-    // Getters e Setters
-    public String getNome() {
-        return nome;
-    }
+    // ---- Getters e Setters ----
 
-    private void setNome(String nome) {
-        this.nome = nome;
-    }
+    public String getNome()                     { return nome; }
+    private void setNome(String nome)           { this.nome = nome; }
 
-    public Tabuleiro getTabuleiro() {
-        return tabuleiro;
-    }
-
-    private void setTabuleiro() {
-        this.tabuleiro = new Tabuleiro();
-    }
-
-    public Tabuleiro getTabuleiroRastreamento() {
-        return tabuleiroRastreamento;
-    }
-
-    private void setTabuleiroRastreamento() {
-        this.tabuleiroRastreamento = new Tabuleiro();
-    }
+    public Tabuleiro getTabuleiro()             { return tabuleiro; }
+    private void setTabuleiro()                 { this.tabuleiro = new Tabuleiro(); }
+    
+    public Tabuleiro getTabuleiroRastreamento() { return tabuleiroRastreamento; }
+    private void setTabuleiroRastreamento()     { this.tabuleiroRastreamento = new Tabuleiro(); }
 }

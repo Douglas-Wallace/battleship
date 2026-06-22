@@ -7,13 +7,13 @@ public class ClientePartida implements ConexaoPartida {
 
     private static final int PORTA = 5000;
 
-    private final String enderecoServidor;
+    private String enderecoServidor;
     private Socket socket;
     private ObjectOutputStream saida;
     private ObjectInputStream entrada;
 
     public ClientePartida(String enderecoServidor) {
-        this.enderecoServidor = enderecoServidor;
+        setEnderecoServidor(enderecoServidor);
     }
 
     @Override
@@ -50,4 +50,7 @@ public class ClientePartida implements ConexaoPartida {
             System.out.println("Erro ao encerrar cliente: " + e.getMessage());
         }
     }
+    
+    // ---- Getters e Setters ----
+    private void setEnderecoServidor(String enderecoServidor){ this.enderecoServidor = enderecoServidor; }
 }

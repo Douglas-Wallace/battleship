@@ -24,7 +24,7 @@ import javax.swing.SwingUtilities;
 
 public class JogoController {
 
-    private final Jogo jogo;
+    private Jogo jogo;
     private ConexaoPartida conexao;
     private boolean ehServidor;
     private boolean usarSwing;
@@ -40,16 +40,16 @@ public class JogoController {
     private final Scanner sc = new Scanner(System.in);
 
     public JogoController(Jogo jogo) {
-        this.jogo = jogo;
+        setJogoController(jogo);
     }
 
-    // ── Início ────────────────────────────────────────────────────────────────
+    // ---- Início ----
 
     public void iniciar() {
         // Reseta o jogador para nova partida
         jogo.getJogador().reiniciar();
-        euTermineiPosicionamento = false;
-        inimigoProntoParaBatalha = false;
+        setEuTermineiPosicionamento(false);
+        setInimigoProntoParaBatalha(false);
         batalhaView = null;
 
         escolherModoConexao();
@@ -58,7 +58,7 @@ public class JogoController {
         iniciarPosicionamento();
     }
 
-    // ── Escolhas iniciais ─────────────────────────────────────────────────────
+    // ---- Escolhas iniciais ----
 
     private void escolherModoConexao() {
         int opcao = JOptionPane.showOptionDialog(
@@ -88,11 +88,11 @@ public class JogoController {
         usarSwing = (opcao == 1);
 
         if (!usarSwing) {
-            consoleView = new ConsoleView();
+            setConsoleView();
         }
     }
 
-    // ── Conexão ───────────────────────────────────────────────────────────────
+    // ---- Conexão ----
 
     private void conectar() {
         try {
@@ -121,7 +121,7 @@ public class JogoController {
         }
     }
 
-    // ── Posicionamento ────────────────────────────────────────────────────────
+    // ---- Posicionamento ----
 
     private void iniciarPosicionamento() {
         if (usarSwing) {
@@ -196,7 +196,7 @@ public class JogoController {
         }
     }
 
-    // ── Fim de jogo ───────────────────────────────────────────────────────────
+    // ---- Fim de jogo ----
 
     private void encerrarPartida(boolean venceu) {
         String mensagem = venceu ? "Você venceu!" : "Você perdeu!";
@@ -219,7 +219,7 @@ public class JogoController {
         iniciar(); // volta pro menu inicial
     }
 
-    // ── Batalha Swing ─────────────────────────────────────────────────────────
+    // ---- Batalha Swing ----
 
     private void abrirBatalhaSwing() {
         Jogador jogador = jogo.getJogador();
@@ -307,7 +307,7 @@ public class JogoController {
         }
     }
 
-    // ── Batalha Console ───────────────────────────────────────────────────────
+    // ---- Batalha Console ----
 
     private void iniciarBatalhaConsole() {
         consoleView.mostrarMensagem("\n=== BATALHA INICIADA ===");
@@ -405,7 +405,7 @@ public class JogoController {
         consoleView.exibirTabuleiro(TabuleiroRenderer.visaoRastreamento(ras), ras.getTamanho());
     }
 
-    // ── Leitura de entrada (console) ──────────────────────────────────────────
+    // ---- Leitura de entrada (console) ----
 
     private int[] lerCoordenada(Jogador jogador) {
         consoleView.mostrarMensagem("Digite a coordenada (ex: B5): ");
@@ -435,7 +435,7 @@ public class JogoController {
         };
     }
 
-    // ── Utilitário ────────────────────────────────────────────────────────────
+    // ---- Utilitário ----
 
     private void mostrarMensagem(String msg) {
         if (usarSwing) {
@@ -452,4 +452,13 @@ public class JogoController {
             }
         }
     }
+    
+   // ---- Getters e Setters ----
+    
+    private void setJogoController(Jogo jogo){ this.jogo = jogo; }
+    private void setConsoleView() { this.consoleView = new ConsoleView(); }
+    private void setEuTermineiPosicionamento(Boolean bool) { this.euTermineiPosicionamento = bool; }
+    private void setInimigoProntoParaBatalha(Boolean bool) { this.inimigoProntoParaBatalha = bool; }
+    
+    
 }

@@ -16,12 +16,9 @@ public class Parte {
         return atingida;
     }
 
-    private void setNavio(Navio navio){
-        this.navio = navio;
-    }
     
-    public Navio getNavio(){
-        return navio;
-    }
+    // --- Getters e Setters ---
+    private void setNavio(Navio navio){ this.navio = navio; }
+    public Navio getNavio(){ return navio; }
    
 }

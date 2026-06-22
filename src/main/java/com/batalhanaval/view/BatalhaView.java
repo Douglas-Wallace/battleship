@@ -37,7 +37,7 @@ import java.util.function.BiConsumer;
  */
 public class BatalhaView extends JFrame {
 
-    // ── Paleta ────────────────────────────────────────────────────────────────
+    // --- Paleta ---
     private static final Color COR_FUNDO           = new Color(10, 20, 40);
     private static final Color COR_CELULA          = new Color(20, 60, 100);
     private static final Color COR_CELULA_BORDA    = new Color(30, 90, 140);
@@ -56,7 +56,7 @@ public class BatalhaView extends JFrame {
     private static final int TAMANHO_CELULA = 46;
     private static final int TAMANHO_HEADER = 28;
 
-    // ── Estado ────────────────────────────────────────────────────────────────
+    // --- Estado ---
     private final Jogador jogador;
     private final BiConsumer<Integer, Integer> aoAtacar;
     private boolean meuTurno = false;
@@ -64,13 +64,13 @@ public class BatalhaView extends JFrame {
     private int hoverLinha  = -1;
     private int hoverColuna = -1;
 
-    // ── Componentes ───────────────────────────────────────────────────────────
+    // --- Componentes ---
     private TabuleiroPanel painelProprio;
     private TabuleiroPanel painelInimigo;
     private JLabel labelTurno;
     private JTextArea areaLog;
 
-    // ─────────────────────────────────────────────────────────────────────────
+    // ---
 
     /**
      * @param jogador   o jogador dono desta tela
@@ -84,7 +84,7 @@ public class BatalhaView extends JFrame {
         construirUI();
     }
 
-    // ── API pública ───────────────────────────────────────────────────────────
+    // --- API pública ---
 
     /** Habilita ou bloqueia o tabuleiro inimigo para ataque. */
     public void habilitarAtaque(boolean habilitado) {
@@ -120,7 +120,7 @@ public class BatalhaView extends JFrame {
         });
     }
 
-    // ── Configuração ──────────────────────────────────────────────────────────
+    // --- Configuração ---
 
     private void configurarJanela() {
         setTitle("Batalha Naval — " + jogador.getNome());
@@ -206,7 +206,7 @@ public class BatalhaView extends JFrame {
         return scroll;
     }
 
-    // ── Mensagens do log ──────────────────────────────────────────────────────
+    // --- Mensagens do log ---
 
     private String mensagemResultado(StatusCelula resultado, int linha, int coluna) {
         char letra = (char) ('A' + coluna);
@@ -219,7 +219,7 @@ public class BatalhaView extends JFrame {
         };
     }
 
-    // ── Painel do tabuleiro ────────────────────────────────────────────────────
+    // --- Painel do tabuleiro ---
 
     private class TabuleiroPanel extends JPanel {
 
@@ -325,7 +325,7 @@ public class BatalhaView extends JFrame {
                 }
             }
 
-            // Headers — números
+            // Headers --- números
             g2.setFont(new Font("Monospaced", Font.BOLD, 11));
             for (int j = 0; j < tamanho; j++) {
                 int x = TAMANHO_HEADER + j * TAMANHO_CELULA + TAMANHO_CELULA / 2;
@@ -333,7 +333,7 @@ public class BatalhaView extends JFrame {
                 drawCentered(g2, String.valueOf(j + 1), x, TAMANHO_HEADER / 2 + 4);
             }
 
-            // Headers — letras
+            // Headers --- letras
             for (int i = 0; i < tamanho; i++) {
                 int y = TAMANHO_HEADER + i * TAMANHO_CELULA + TAMANHO_CELULA / 2;
                 g2.setColor(COR_DESTAQUE);
@@ -357,7 +357,7 @@ public class BatalhaView extends JFrame {
                     default      -> COR_CELULA;
                 };
             } else {
-                // Tabuleiro próprio — mostra o que aconteceu com seus navios
+                // Tabuleiro próprio --- mostra o que aconteceu com seus navios
                 if (celula.temNavio()) {
                     return celula.navioAfundado() ? COR_AFUNDADO : COR_ACERTO;
                 }

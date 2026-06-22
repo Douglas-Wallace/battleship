@@ -11,7 +11,7 @@ public class Celula {
     public Celula() {
     }
 
-    // ── Métodos de negócio ────────────────────────────────────────────────────
+    // ---- Métodos de negócio ----
 
     /** Ataca a célula real (tabuleiro próprio). Marca como atacada e atinge a parte se houver navio. */
     public void atacar() {
@@ -40,17 +40,11 @@ public class Celula {
         return parte.getNavio().foiAfundado();
     }
 
-    // ── Getters e Setters ─────────────────────────────────────────────────────
+    // ---- Getters e Setters ----
 
-    public void setParte(Parte parte) {
-        this.parte = parte;
-    }
+    public void setParte(Parte parte) { this.parte = parte; }
 
-    public Parte getParte() {
-        return this.parte;
-    }
+    public Parte getParte() { return this.parte; }
 
-    public StatusCelula getStatusAtaque() {
-        return statusAtaque;
-    }
+    public StatusCelula getStatusAtaque() { return statusAtaque; }
 }

@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 
 public class Main {
 
-    public static void main(String[] args) {
+	public static void main(String[] args) {
 		String nome = JOptionPane.showInputDialog(null, "Digite seu nome:", "Batalha Naval",
 				JOptionPane.QUESTION_MESSAGE);
 
@@ -21,4 +21,3 @@ public class Main {
 		controller.iniciar();
 	}
 }
-

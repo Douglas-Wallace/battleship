@@ -7,8 +7,7 @@ public class Jogo {
     public Jogo(Jogador jogador) {
         this.jogador = jogador;
     }
-
-    public Jogador getJogador() {
-        return jogador;
-    }
+    
+    // ---- Getters ----
+    public Jogador getJogador() { return jogador; }
 }

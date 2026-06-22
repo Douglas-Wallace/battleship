@@ -15,7 +15,7 @@ public class Tabuleiro {
         setTabuleiro();
     }
 
-    // ── Métodos de negócio ────────────────────────────────────────────────────
+    // ---- Métodos de negócio ----
 
     public void adicionarNavio(Navio navio, int linha, int coluna, Direcao direcao) {
         validarDirecao(direcao);
@@ -45,7 +45,7 @@ public class Tabuleiro {
         }
 
         celula.atacar();
-
+        
         if (celula.temNavio()) {
             return celula.navioAfundado() ? StatusCelula.AFUNDOU : StatusCelula.ACERTOU;
         }
@@ -70,7 +70,7 @@ public class Tabuleiro {
 
     /**
      * Calcula as posições que um navio ocuparia a partir de (linha, coluna)
-     * na direção e tamanho informados. Não valida — só calcula.
+     * na direção e tamanho informados. Não valida, só calcula.
      */
     public List<int[]> calcularPosicoes(int linha, int coluna, Direcao direcao, int tamanhoNavio) {
         List<int[]> posicoes = new ArrayList<>();
@@ -93,7 +93,7 @@ public class Tabuleiro {
         return true;
     }
 
-    // ── Métodos auxiliares ────────────────────────────────────────────────────
+    // ---- Métodos auxiliares ----
 
     private void validarDirecao(Direcao direcao) {
         if (direcao == null) {
@@ -125,7 +125,7 @@ public class Tabuleiro {
         return linha >= 0 && linha < tamanho && coluna >= 0 && coluna < tamanho;
     }
 
-    // ── Getters e Setters ─────────────────────────────────────────────────────
+    // ---- Getters e Setters ----
 
     private void setTabuleiro() {
         this.tabuleiro = new Celula[tamanho][tamanho];
@@ -136,11 +136,7 @@ public class Tabuleiro {
         }
     }
 
-    public int getTamanho() {
-        return tamanho;
-    }
+    public int getTamanho() { return tamanho; }
 
-    public Celula getCelula(int linha, int coluna) {
-        return tabuleiro[linha][coluna];
-    }
+    public Celula getCelula(int linha, int coluna) { return tabuleiro[linha][coluna]; }
 }
