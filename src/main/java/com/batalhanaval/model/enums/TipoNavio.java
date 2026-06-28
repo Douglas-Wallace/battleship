@@ -5,8 +5,8 @@ package com.batalhanaval.model.enums;
 public enum TipoNavio {
     PORTA_AVIOES(5, 1, "Porta-Aviões"),
     CRUZADOR(4, 2, "Cruzador"),
-    CONTRA_TOPEDEIRO(3, 2, "Contra Torpedeiro"),
-    SUBMARINO(2, 3, "Submarino");
+    CONTRA_TORPEDEIRO(3, 2, "Contra Torpedeiro"),
+    SUBMARINOONTRA_TOPEDEIR(2, 3, "Submarino");
 
     private int limite;
     private int tamanho;

@@ -57,7 +57,7 @@ public class JogoController {
         conectar();
         iniciarPosicionamento();
     }
-
+    
     // ---- Escolhas iniciais ----
 
     private void escolherModoConexao() {
@@ -138,7 +138,8 @@ public class JogoController {
     private void posicionarNaviosConsole() {
         Jogador jogador = jogo.getJogador();
         Tabuleiro tab   = jogador.getTabuleiro();
-
+        
+        
         for (TipoNavio tipo : TipoNavio.values()) {
             for (int i = 0; i < tipo.getLimite(); i++) {
                 boolean posicionado = false;
