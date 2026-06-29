@@ -12,18 +12,6 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Tela de posicionamento de navios (Swing).
- *
- * Uso:
- *   PosicionamentoView tela = new PosicionamentoView(jogador, () -> proximaFase());
- *   tela.setVisible(true);
- *
- * Controles:
- *   - Hover  → preview das células que o navio vai ocupar (verde = ok, vermelho = inválido)
- *   - Clique → confirma posicionamento
- *   - R      → rotaciona a direção (LESTE → SUL → OESTE → NORTE → LESTE)
- */
 public class PosicionamentoView extends JFrame {
 
     // --- Paleta ---
@@ -51,7 +39,7 @@ public class PosicionamentoView extends JFrame {
     private int hoverLinha  = -1;
     private int hoverColuna = -1;
 
-    // --- Componentes v
+    // --- Componentes visuais ---
     private TabuleiroPanel painelTabuleiro;
     private JLabel labelNavio;
     private JLabel labelDirecao;

@@ -15,10 +15,9 @@ public class Navio {
         setPartes();
     }
 
-    private void setPartes(){
-       this.partes = new ArrayList<>();
-
-       for (int i = 0; i < tipo.getTamanho(); i++) {
+    private void setPartes() {
+        this.partes = new ArrayList<>();
+        for (int i = 0; i < tipo.getTamanho(); i++) {
             partes.add(new Parte(this));
         }
     }
@@ -27,7 +26,7 @@ public class Navio {
         return Collections.unmodifiableList(partes);
     }
 
-    private void setTipo(TipoNavio tipo){
+    private void setTipo(TipoNavio tipo) {
         this.tipo = tipo;
     }
 
@@ -36,12 +35,7 @@ public class Navio {
     }
 
     public boolean foiAfundado() {
-        for (Parte parte : partes) {
-            if (!parte.foiAtingida()) {
-                return false;
-            }
-        }
-        return true;
+        return partes.stream().allMatch(parte -> parte.foiAtingida());
     }
 
     @Override

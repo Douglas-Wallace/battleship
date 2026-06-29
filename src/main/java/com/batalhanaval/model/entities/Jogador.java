@@ -1,7 +1,6 @@
 package com.batalhanaval.model.entities;
 
 import com.batalhanaval.model.enums.Direcao;
-import com.batalhanaval.model.enums.StatusCelula;
 import com.batalhanaval.model.enums.TipoNavio;
 
 public class Jogador {
@@ -18,20 +17,13 @@ public class Jogador {
 
     // ---- Métodos de negócio ----
 
-    private void setTabuleiro() {
-        this.tabuleiro = new Tabuleiro();
+    public void posicionarNavio(TipoNavio tipo, int linha, int coluna, Direcao direcao) {
+        tabuleiro.adicionarNavio(new Navio(tipo), linha, coluna, direcao);
     }
 
-    public StatusCelula atacar(Jogador inimigo, int linha, int coluna) {
-        StatusCelula resultado = inimigo.getTabuleiro().atacar(linha, coluna);
-        tabuleiroRastreamento.registrarAtaque(linha, coluna, resultado);
-        return resultado;
+    public boolean naviosAfundados() {
+        return tabuleiro.naviosAfundados();
     }
-
-    private void setTabuleiroRastreamento() {
-        this.tabuleiroRastreamento = new Tabuleiro();
-    }
-
 
     public void reiniciar() {
         setTabuleiro();
@@ -45,7 +37,7 @@ public class Jogador {
 
     public Tabuleiro getTabuleiro()             { return tabuleiro; }
     private void setTabuleiro()                 { this.tabuleiro = new Tabuleiro(); }
-    
+
     public Tabuleiro getTabuleiroRastreamento() { return tabuleiroRastreamento; }
     private void setTabuleiroRastreamento()     { this.tabuleiroRastreamento = new Tabuleiro(); }
 }

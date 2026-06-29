@@ -8,6 +8,7 @@ import com.batalhanaval.model.enums.StatusCelula;
 import com.batalhanaval.model.enums.TipoNavio;
 import com.batalhanaval.model.exceptions.PosicionamentoInvalidoException;
 import com.batalhanaval.model.util.CoordenadaParser;
+import com.batalhanaval.model.util.HistoricoPartida;
 import com.batalhanaval.network.ClientePartida;
 import com.batalhanaval.network.ConexaoPartida;
 import com.batalhanaval.network.Mensagem;
@@ -28,14 +29,11 @@ public class JogoController {
     private ConexaoPartida conexao;
     private boolean ehServidor;
     private boolean usarSwing;
+    private int contadorJogadas = 0;
 
     // Views
     private ConsoleView consoleView;
     private BatalhaView batalhaView;
-
-    // Sincronização do posicionamento
-    private boolean euTermineiPosicionamento = false;
-    private boolean inimigoProntoParaBatalha = false;
 
     private final Scanner sc = new Scanner(System.in);
 
@@ -46,11 +44,9 @@ public class JogoController {
     // ---- Início ----
 
     public void iniciar() {
-        // Reseta o jogador para nova partida
         jogo.getJogador().reiniciar();
-        setEuTermineiPosicionamento(false);
-        setInimigoProntoParaBatalha(false);
         batalhaView = null;
+        contadorJogadas = 0;
 
         escolherModoConexao();
         escolherInterface();
@@ -165,7 +161,6 @@ public class JogoController {
     }
 
     private void aoTerminarPosicionamento() {
-        euTermineiPosicionamento = true;
         mostrarMensagem("Navios posicionados! Aguardando adversário...");
 
         try {
@@ -179,7 +174,6 @@ public class JogoController {
             try {
                 Mensagem msg = conexao.receber();
                 if (msg.getTipo() == TipoMensagem.INICIO) {
-                    inimigoProntoParaBatalha = true;
                     ambosProtos();
                 }
             } catch (IOException e) {
@@ -199,6 +193,9 @@ public class JogoController {
     // ---- Fim de jogo ----
 
     private void encerrarPartida(boolean venceu) {
+        String nomeVencedor = venceu ? jogo.getJogador().getNome() : "Adversário";
+        HistoricoPartida.salvar(nomeVencedor, contadorJogadas);
+
         String mensagem = venceu ? "Você venceu!" : "Você perdeu!";
 
         if (usarSwing) {
@@ -216,7 +213,7 @@ public class JogoController {
 
     private void reiniciar() {
         conexao.encerrar();
-        iniciar(); // volta pro menu inicial
+        iniciar();
     }
 
     // ---- Batalha Swing ----
@@ -261,6 +258,8 @@ public class JogoController {
 
                         SwingUtilities.invokeLater(() -> batalhaView.atualizarTabuleiro());
 
+                        contadorJogadas++;
+
                         if (jogo.getJogador().naviosAfundados()) {
                             conexao.enviar(new Mensagem(TipoMensagem.DERROTA));
                             encerrarPartida(false);
@@ -289,7 +288,6 @@ public class JogoController {
                     }
 
                     case DERROTA -> {
-                        // inimigo avisou que perdeu — eu venci
                         encerrarPartida(true);
                         return;
                     }
@@ -338,6 +336,8 @@ public class JogoController {
 
                         consoleView.mostrarResultadoAtaque(resultado);
                         exibirTabuleirosProprios();
+
+                        contadorJogadas++;
 
                         if (jogo.getJogador().naviosAfundados()) {
                             conexao.enviar(new Mensagem(TipoMensagem.DERROTA));
@@ -452,13 +452,9 @@ public class JogoController {
             }
         }
     }
-    
-   // ---- Getters e Setters ----
-    
-    private void setJogoController(Jogo jogo){ this.jogo = jogo; }
+
+    // ---- Getters e Setters ----
+
+    private void setJogoController(Jogo jogo) { this.jogo = jogo; }
     private void setConsoleView() { this.consoleView = new ConsoleView(); }
-    private void setEuTermineiPosicionamento(Boolean bool) { this.euTermineiPosicionamento = bool; }
-    private void setInimigoProntoParaBatalha(Boolean bool) { this.inimigoProntoParaBatalha = bool; }
-    
-    
 }

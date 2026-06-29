@@ -45,7 +45,7 @@ public class Tabuleiro {
         }
 
         celula.atacar();
-        
+
         if (celula.temNavio()) {
             return celula.navioAfundado() ? StatusCelula.AFUNDOU : StatusCelula.ACERTOU;
         }
@@ -57,21 +57,20 @@ public class Tabuleiro {
     }
 
     public boolean naviosAfundados() {
+        boolean temNavio = false;
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
                 Celula celula = tabuleiro[i][j];
-                if (celula.temNavio() && !celula.navioAfundado()) {
-                    return false;
+                if (celula.temNavio()) {
+                    temNavio = true;
+                    if (!celula.navioAfundado()) return false;
                 }
             }
         }
-        return true;
+        return temNavio;
     }
 
-    /**
-     * Calcula as posições que um navio ocuparia a partir de (linha, coluna)
-     * na direção e tamanho informados. Não valida, só calcula.
-     */
+
     public List<int[]> calcularPosicoes(int linha, int coluna, Direcao direcao, int tamanhoNavio) {
         List<int[]> posicoes = new ArrayList<>();
         for (int i = 0; i < tamanhoNavio; i++) {
@@ -80,17 +79,12 @@ public class Tabuleiro {
         return posicoes;
     }
 
-    /**
-     * Verifica se um navio pode ser posicionado a partir de (linha, coluna)
-     * na direção e tamanho informados.
-     */
+
     public boolean posicionamentoValido(int linha, int coluna, Direcao direcao, int tamanhoNavio) {
         List<int[]> posicoes = calcularPosicoes(linha, coluna, direcao, tamanhoNavio);
-        for (int[] pos : posicoes) {
-            if (!estaDentroDoTabuleiro(pos[0], pos[1])) return false;
-            if (!podePosicionar(pos[0], pos[1]))        return false;
-        }
-        return true;
+        return posicoes.stream().allMatch(pos ->
+            estaDentroDoTabuleiro(pos[0], pos[1]) && podePosicionar(pos[0], pos[1])
+        );
     }
 
     // ---- Métodos auxiliares ----
