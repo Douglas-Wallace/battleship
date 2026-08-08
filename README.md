@@ -1,4 +1,4 @@
-# ⚓ Batalha Naval — Multiplayer em Java
+# ⚓ Batalha Naval: Multiplayer em Java
 
 Jogo de Batalha Naval multiplayer (2 jogadores, via rede local) desenvolvido em Java como projeto acadêmico. Suporta interface em **Swing** (gráfica) ou **Console**, comunicação em tempo real via **TCP Sockets**, e persistência de histórico de partidas em arquivo.
 
@@ -8,7 +8,7 @@ Jogo de Batalha Naval multiplayer (2 jogadores, via rede local) desenvolvido em 
 
 ## 🎮 Sobre o projeto
 
-Cada jogador posiciona sua frota em um tabuleiro próprio e tenta afundar a frota do adversário atacando coordenadas às cegas. O jogo roda em duas instâncias conectadas por socket — uma atua como servidor e a outra como cliente — trocando mensagens serializadas a cada jogada até que um dos jogadores afunde toda a frota inimiga.
+Cada jogador posiciona sua frota em um tabuleiro próprio e tenta afundar a frota do adversário atacando coordenadas às cegas. O jogo roda em duas instâncias conectadas por socket: uma atua como servidor e a outra como cliente, trocando mensagens serializadas a cada jogada até que um dos jogadores afunde toda a frota inimiga.
 
 ### Funcionalidades
 
@@ -23,7 +23,7 @@ Cada jogador posiciona sua frota em um tabuleiro próprio e tenta afundar a frot
 
 ## 🏗️ Arquitetura
 
-O projeto segue o padrão **MVC (Model-View-Controller)**, com o controller centralizando toda a orquestração da partida — incluindo negociação de rede, alternância de turnos e sincronização entre os dois jogadores.
+O projeto segue o padrão **MVC (Model-View-Controller)**, com o controller centralizando toda a orquestração da partida, incluindo negociação de rede, alternância de turnos e sincronização entre os dois jogadores.
 
 ```
 src/main/java/com/batalhanaval/
@@ -55,7 +55,7 @@ public class Mensagem implements Serializable {
 
 Cada tipo de mensagem carrega apenas os dados necessários (uma coordenada de ataque, ou um resultado + coordenada de origem), mantendo o protocolo simples e explícito entre as pontas.
 
-**Desafio técnico resolvido:** um deadlock de rede causado por leituras e escritas bloqueantes nos streams — corrigido garantindo `flush()` no stream de saída antes de qualquer leitura bloqueante do lado oposto, evitando que ambas as pontas ficassem esperando dados uma da outra indefinidamente.
+**Desafio técnico resolvido:** um deadlock de rede causado por leituras e escritas bloqueantes nos streams. A correção foi garantir `flush()` no stream de saída antes de qualquer leitura bloqueante do lado oposto, evitando que ambas as pontas ficassem esperando dados uma da outra indefinidamente.
 
 ---
 
@@ -79,7 +79,7 @@ mvn compile exec:java -Dexec.mainClass="com.batalhanaval.app.Main"
 1. Um jogador inicia o jogo e escolhe hospedar a partida (servidor)
 2. O outro jogador inicia sua instância e se conecta ao IP do host (cliente)
 3. Ambos posicionam sua frota
-4. A partida começa — jogadores se alternam atacando coordenadas até um afundar toda a frota do outro
+4. A partida começa: jogadores se alternam atacando coordenadas até um afundar toda a frota do outro
 
 > **Nota:** para jogar entre máquinas em redes diferentes, pode ser necessário liberar a porta usada no firewall/antivírus (softwares como Avast podem bloquear a conexão de VPNs de rede como Radmin).
 
@@ -89,7 +89,7 @@ mvn compile exec:java -Dexec.mainClass="com.batalhanaval.app.Main"
 
 Este projeto foi uma aplicação prática de conceitos que vão além da sintaxe da linguagem:
 
-- **MVC na prática**: entender que "MVC" não é só organizar pastas, mas garantir que a View nunca tome decisões de regra de negócio — um refatoramento real foi necessário para mover validações que "vazaram" para a camada gráfica de volta ao Model
+- **MVC na prática**: entender que "MVC" não é só organizar pastas, mas garantir que a View nunca tome decisões de regra de negócio. Um refatoramento real foi necessário para mover validações que "vazaram" para a camada gráfica de volta ao Model
 - **Programação concorrente**: uso de Threads para que a escuta de mensagens de rede não bloqueasse a interface do jogo, e os cuidados necessários para evitar deadlocks em comunicação bidirecional por sockets
 - **Design de protocolos**: criar um protocolo de mensagens (`Mensagem`/`TipoMensagem`) simples, tipado e extensível para sincronizar estado entre dois processos independentes
 - **Debugging de rede real**: diagnosticar problemas de conectividade causados por fatores externos ao código (antivírus, VPN), não só bugs de lógica
@@ -100,11 +100,11 @@ Este projeto foi uma aplicação prática de conceitos que vão além da sintaxe
 ## 🛠️ Tecnologias
 
 - **Java 25**
-- **Swing** — interface gráfica
-- **TCP Sockets** (`java.net`) — comunicação multiplayer
-- **Threads** (`java.lang.Thread`) — concorrência entre UI e rede
-- **Java I/O** (`ObjectOutputStream`/`ObjectInputStream`, `BufferedReader`/`Writer`) — protocolo de rede e persistência de histórico
-- **Maven** — build e gerenciamento de dependências
+- **Swing**: interface gráfica
+- **TCP Sockets** (`java.net`): comunicação multiplayer
+- **Threads** (`java.lang.Thread`): concorrência entre UI e rede
+- **Java I/O** (`ObjectOutputStream`/`ObjectInputStream`, `BufferedReader`/`Writer`): protocolo de rede e persistência de histórico
+- **Maven**: build e gerenciamento de dependências
 
 ---
 
