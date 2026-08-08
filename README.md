@@ -113,7 +113,7 @@ Este projeto foi uma aplicação prática de conceitos que vão além da sintaxe
 Projeto desenvolvido em dupla como trabalho acadêmico.
 
 - [Douglas](https://github.com/<seu-usuario>)
-- Isabella
+- [Isabella](https://github.com/IsabellaLimaa)
 
 ---
 
